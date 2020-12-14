@@ -3,13 +3,12 @@ import "firebase/auth";
 import "firebase/database";
 import { Logger } from "../../util/logger";
 import { IS_DEBUG_MODE } from "../../util/constants";
+import { firebaseConfig } from "./config";
 
 const logger = Logger.tag("Firebase");
 
-const config = {};
-
 try {
-  logger.d("Initialize firebase with config: ", config);
+  logger.d("Initialize firebase with config: ", firebaseConfig);
   firebase.setLogLevel(IS_DEBUG_MODE ? "debug" : "silent");
   firebase.onLog(({ level, message, args }) => {
     switch (level) {
@@ -23,7 +22,7 @@ try {
         logger.d(message, ...args);
     }
   });
-  firebase.initializeApp(config);
+  firebase.initializeApp(firebaseConfig);
 } catch (e) {
   logger.e(e, "Error initializing Firebase");
 }

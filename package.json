@@ -5,12 +5,14 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@craco/craco": "6.0.0",
+    "@runmeetly/cache-man": "0.2.1",
     "@tailwindcss/postcss7-compat": "2.0.2",
     "@testing-library/jest-dom": "5.11.6",
     "@testing-library/react": "11.2.2",
     "@testing-library/user-event": "12.6.0",
     "autoprefixer": "9",
     "firebase": "8.2.0",
+    "lodash": "4.17.20",
     "postcss": "7",
     "react": "17.0.1",
     "react-app-polyfill": "2.0.0",
@@ -18,6 +20,7 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "uuid": "8.3.2",
     "web-vitals": "1.0.1"
   },
   "scripts": {

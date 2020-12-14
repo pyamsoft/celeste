@@ -14,24 +14,30 @@ export class App extends React.Component {
       user: User.UNDEFINED,
     };
 
-    this.watchUserListener = null;
+    this.authListener = null;
+
+    AuthInteractor.processLogin();
   }
 
   componentDidMount() {
-    this.watchUserListener = AuthInteractor.listenForAuthChanges((user) => {
+    this.authListener = AuthInteractor.listenForAuthChanges((user) => {
       logger.d("User updated: ", user);
       this.setState({ user });
     });
   }
 
   componentWillUnmount() {
-    if (stopListening(this.watchUserListener)) {
-      this.watchUserListener = null;
+    if (stopListening(this.authListener)) {
+      this.authListener = null;
     }
   }
 
   render() {
     const { user } = this.state;
-    return <AppView user={user} />;
+    return (
+      <React.StrictMode>
+        <AppView user={user} />
+      </React.StrictMode>
+    );
   }
 }

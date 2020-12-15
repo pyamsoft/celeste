@@ -20,12 +20,12 @@ export class App extends React.Component {
 
     // All of the AC items
     const acnh = {};
-    acnh[ACNHFish.TYPE] = [];
-    acnh[ACNHBug.TYPE] = [];
-    acnh[ACNHSea.TYPE] = [];
-    acnh[ACNHFossil.TYPE] = [];
-    acnh[ACNHHouseware.TYPE] = [];
-    acnh[ACNHWallmount.TYPE] = [];
+    acnh[ACNHFish.TYPE] = {};
+    acnh[ACNHBug.TYPE] = {};
+    acnh[ACNHSea.TYPE] = {};
+    acnh[ACNHFossil.TYPE] = {};
+    acnh[ACNHHouseware.TYPE] = {};
+    acnh[ACNHWallmount.TYPE] = {};
 
     this.state = {
       user: User.UNDEFINED,
@@ -99,7 +99,7 @@ export class App extends React.Component {
       .catch((error) => {
         logger.e(error, "Failed to load", key);
         const { acnh } = this.state;
-        acnh[key] = [];
+        acnh[key] = {};
         this.setState({ acnh });
       });
   };

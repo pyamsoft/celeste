@@ -46,6 +46,15 @@ export class WishListItems extends React.Component {
     }
   }
 
+  filterVisibleItems = (item) => {
+    const { items, isEditable } = this.props;
+    if (isEditable) {
+      return true;
+    } else {
+      return items.find((i) => i.id === item.id);
+    }
+  };
+
   render() {
     const {
       className,
@@ -54,10 +63,9 @@ export class WishListItems extends React.Component {
       category,
       onItemAdded,
       onItemRemoved,
-      items,
     } = this.props;
     const { itemSize } = this.state;
-    const series = acnh[category] || [];
+    const categoryItems = acnh[category] || {};
     return (
       <div
         className={`${
@@ -67,36 +75,38 @@ export class WishListItems extends React.Component {
       >
         {isMultiSeriesCategory(category) ? (
           <div className="block w-full overflow-x-hidden overflow-y-auto h-full">
-            {series.map((variants, index) => (
+            {Object.keys(categoryItems).map((series) => (
               <div
-                key={index}
+                key={series}
                 className="flex flex-row flex-nowrap overflow-x-auto"
               >
-                {variants.map((item, i) => (
-                  <WishListItem
-                    key={`${category}-${index}-${i}-${item.id}`}
-                    item={item}
-                    onAdd={onItemAdded}
-                    onRemove={onItemRemoved}
-                    items={items}
-                    size={itemSize}
-                  />
-                ))}
+                {categoryItems[series]
+                  .filter(this.filterVisibleItems)
+                  .map((item) => (
+                    <WishListItem
+                      key={`${category}-${series}-${item.variant}-${item.id}`}
+                      item={item}
+                      onAdd={onItemAdded}
+                      onRemove={onItemRemoved}
+                      size={itemSize}
+                    />
+                  ))}
               </div>
             ))}
           </div>
         ) : (
           <div className="flex flex-row flex-wrap overflow-x-hidden overflow-y-auto h-full">
-            {series.map((item) => (
-              <WishListItem
-                key={`${category}-${item.id}`}
-                item={item}
-                onAdd={onItemAdded}
-                onRemove={onItemRemoved}
-                items={items}
-                size={itemSize}
-              />
-            ))}
+            {Object.values(categoryItems)
+              .filter(this.filterVisibleItems)
+              .map((item) => (
+                <WishListItem
+                  key={`${category}-${item.id}`}
+                  item={item}
+                  onAdd={onItemAdded}
+                  onRemove={onItemRemoved}
+                  size={itemSize}
+                />
+              ))}
           </div>
         )}
       </div>
@@ -130,10 +140,7 @@ class WishListItem extends React.Component {
   render() {
     const { item, size } = this.props;
     return (
-      <div
-        className="p-1 cursor-point mx-auto"
-        style={this.generateItemStyle(size)}
-      >
+      <div className="p-1 cursor-point" style={this.generateItemStyle(size)}>
         <div className="relative w-full h-full bg-gray-300 hover:bg-gray-100 rounded-lg border-2 border-gray-400 hover:border-gray-500">
           <Img
             preload={true}

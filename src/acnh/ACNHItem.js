@@ -5,12 +5,14 @@ export class ACNHItem {
   #name;
   #price;
   #image;
+  #series;
 
-  constructor({ id, name, price, image }) {
+  constructor({ id, name, price, image, series }) {
     this.#id = id || "";
     this.#name = name || "";
     this.#price = price || 0;
     this.#image = image || "";
+    this.#series = series || "";
   }
 
   get id() {
@@ -27,5 +29,9 @@ export class ACNHItem {
 
   get image() {
     return this.#image;
+  }
+
+  get series() {
+    return this.#series;
   }
 }

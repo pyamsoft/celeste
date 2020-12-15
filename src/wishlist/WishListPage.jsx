@@ -1,6 +1,5 @@
 import React from "react";
 import { WishList } from "./WishList";
-import { noop } from "../common/util/function";
 import { Title } from "../common/component/Title";
 import { Logger } from "../common/util/logger";
 import { registerRoute } from "../router/Router";
@@ -43,6 +42,16 @@ class WishListController extends React.Component {
     });
   };
 
+  handleItemAdded = (item) => {
+    const { wishlist } = this.props;
+    logger.d("Item gifted to wishlist: ", item, wishlist);
+  };
+
+  handleItemRemoved = (item) => {
+    const { wishlist } = this.props;
+    logger.d("Item taken back from wishlist: ", item, wishlist);
+  };
+
   render() {
     const { user, acnh } = this.props;
     const { loading, wishlist } = this.state;
@@ -52,10 +61,11 @@ class WishListController extends React.Component {
       <WishList
         user={user}
         acnh={acnh}
-        onCommit={noop}
-        onCreate={noop}
-        onClose={noop}
-        wishlist={wishlist}
+        isEditable={false}
+        name={wishlist.name}
+        items={wishlist.items}
+        onItemAdded={this.handleItemAdded}
+        onItemRemoved={this.handleItemRemoved}
       />
     );
   }

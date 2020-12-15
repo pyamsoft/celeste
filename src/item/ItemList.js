@@ -10,8 +10,11 @@ export class ItemList {
     this.#name = data?.name || "";
     this.#items = data?.items
       ? Object.keys(data.items).map((key) => {
-          const count = data.items[key];
-          return new Item(key, count);
+          const values = data.items[key];
+          return new Item({
+            id: key,
+            ...values,
+          });
         })
       : [];
   }
@@ -28,4 +31,3 @@ export class ItemList {
     return [...this.#items];
   }
 }
-

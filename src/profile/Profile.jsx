@@ -2,7 +2,6 @@ import React from "react";
 import { Logger } from "../common/util/logger";
 import { ProfileLoading } from "./ProfileLoading";
 import { UserProfile } from "./UserProfile";
-import { WishListInteractor } from "../wishlist/WishListInteractor";
 import { stopListening } from "../common/util/listener";
 import { WishListEditorDialog } from "../wishlist/WishListEditorDialog";
 import { ProfileInteractor } from "./ProfileInteractor";
@@ -14,7 +13,6 @@ export class Profile extends React.Component {
     super(props);
     this.state = {
       selected: null,
-      submitted: false,
 
       userList: null,
       wishLists: null,
@@ -31,7 +29,6 @@ export class Profile extends React.Component {
       onUserListChange: (userList) => {
         logger.d("User list updated: ", userList);
         this.setState({ userList }, () => {
-          this.createDefaultWishList();
           this.registerItemListeners();
         });
       },
@@ -83,17 +80,6 @@ export class Profile extends React.Component {
     });
   };
 
-  createDefaultWishList = () => {
-    const { userList } = this.state;
-    if (!userList) {
-      return;
-    }
-
-    if (!userList.wishlists || userList.wishlists.length <= 0) {
-      this.handleSubmitNewWishList("My Wishlist", []);
-    }
-  };
-
   handleWishListSelected = (wishlist) => {
     this.setState({ selected: wishlist });
   };
@@ -104,43 +90,6 @@ export class Profile extends React.Component {
 
   handleCloseWishList = () => {
     this.setState({ selected: null });
-  };
-
-  handleCommitWishList = (callback) => {
-    const { submitted } = this.state;
-    if (submitted) {
-      return;
-    }
-
-    this.setState({ submitted: true }, () => {
-      try {
-        callback();
-      } finally {
-        this.setState({ submitted: false });
-      }
-    });
-  };
-
-  handleSubmitNewWishList = (name, items) => {
-    this.handleCommitWishList(async () => {
-      const { user } = this.props;
-      try {
-        const result = await WishListInteractor.createNewWishList({
-          userID: user.id,
-          wishListName: name,
-          items,
-        });
-        logger.d("New wish list created:", result);
-      } catch (e) {
-        logger.e(e, "Error creating new wish list");
-      }
-    });
-  };
-
-  handleUpdateWishList = (id, name, items) => {
-    this.handleCommitWishList(async () => {
-      logger.d("Update wishlist", id, name, items);
-    });
   };
 
   render() {
@@ -165,8 +114,6 @@ export class Profile extends React.Component {
             acnh={acnh}
             onClose={this.handleCloseWishList}
             wishlist={selected}
-            onCreate={this.handleSubmitNewWishList}
-            onCommit={this.handleUpdateWishList}
           />
         )}
       </div>

@@ -35,14 +35,20 @@ function clearCache(cache) {
 
 async function getAll(cache, endpoint, model) {
   const items = await cacheWith(cache, null, endpoint);
-  return Object.keys(items)
-    .map((key) => items[key])
-    .map((item) => model(item));
+  const result = {};
+  for (const key of Object.keys(items)) {
+    result[key] = model(key, items[key]);
+  }
+  return result;
 }
 
 export class ACNHInteractor {
   static async getAllFish() {
-    return getAll(fishCache, ACNHApi.getAllFish, (data) => new ACNHFish(data));
+    return getAll(
+      fishCache,
+      ACNHApi.getAllFish,
+      (key, data) => new ACNHFish(key, data)
+    );
   }
 
   static clearFish() {
@@ -50,7 +56,11 @@ export class ACNHInteractor {
   }
 
   static async getAllSea() {
-    return getAll(seaCache, ACNHApi.getAllSea, (data) => new ACNHSea(data));
+    return getAll(
+      seaCache,
+      ACNHApi.getAllSea,
+      (key, data) => new ACNHSea(key, data)
+    );
   }
 
   static clearSea() {
@@ -58,7 +68,11 @@ export class ACNHInteractor {
   }
 
   static async getAllBug() {
-    return getAll(bugCache, ACNHApi.getAllBugs, (data) => new ACNHBug(data));
+    return getAll(
+      bugCache,
+      ACNHApi.getAllBugs,
+      (key, data) => new ACNHBug(key, data)
+    );
   }
 
   static clearBug() {
@@ -69,7 +83,7 @@ export class ACNHInteractor {
     return getAll(
       fossilCache,
       ACNHApi.getAllFossils,
-      (data) => new ACNHFossil(data)
+      (key, data) => new ACNHFossil(key, data)
     );
   }
 
@@ -78,8 +92,8 @@ export class ACNHInteractor {
   }
 
   static async getAllHouse() {
-    return getAll(houseCache, ACNHApi.getAllHouseware, (series) =>
-      series.map((s) => new ACNHHouseware(s)).flatMap((s) => s)
+    return getAll(houseCache, ACNHApi.getAllHouseware, (key, series) =>
+      series.map((s) => new ACNHHouseware(key, s)).flatMap((s) => s)
     );
   }
 
@@ -88,8 +102,8 @@ export class ACNHInteractor {
   }
 
   static async getAllWall() {
-    return getAll(wallCache, ACNHApi.getAllWallmounted, (series) =>
-      series.map((s) => new ACNHWallmount(s)).flatMap((s) => s)
+    return getAll(wallCache, ACNHApi.getAllWallmounted, (key, series) =>
+      series.map((s) => new ACNHWallmount(key, s)).flatMap((s) => s)
     );
   }
 

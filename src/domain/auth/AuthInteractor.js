@@ -101,9 +101,6 @@ export class AuthInteractor {
           if (!resolved) {
             logger.w("User is null, stop watching user and force re-auth");
             resolverDebouncer.cancel();
-            if (stopListening(userWatcher)) {
-              userWatcher = null;
-            }
           }
         });
       }

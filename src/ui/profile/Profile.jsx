@@ -1,9 +1,9 @@
 import React from "react";
-import { ACItem } from "../../domain/item/ACItem";
 import { UserWishListInteractor } from "../../domain/wishlist/UserWishListInteractor";
 import { Logger } from "../../util/logger";
 import { ProfileLoading } from "./ProfileLoading";
 import { UserProfile } from "./UserProfile";
+import { WishListInteractor } from "../../domain/wishlist/WishListInteractor";
 
 const logger = Logger.tag("Profile");
 
@@ -32,6 +32,7 @@ export class Profile extends React.Component {
       {
         id: "TEST-HELLO",
         type: "fish",
+        count: 3,
       },
     ]);
     this.setState({ creating: true });
@@ -44,7 +45,7 @@ export class Profile extends React.Component {
   handleSubmitNewWishList = async (name, items) => {
     const { user } = this.props;
     try {
-      const result = await UserWishListInteractor.createNewWishList({
+      const result = await WishListInteractor.createNewWishList({
         userID: user.id,
         wishListName: name,
         items,

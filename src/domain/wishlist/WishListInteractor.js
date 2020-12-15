@@ -4,9 +4,9 @@ import { ItemWishListApi } from "../../api/endpoints/ItemWishListApi";
 import { ItemApi } from "../../api/endpoints/ItemApi";
 import { ItemWishList } from "./ItemWishList";
 
-const logger = Logger.tag("UserWishListInteractor");
+const logger = Logger.tag("WishListInteractor");
 
-export class UserWishListInteractor {
+export class WishListInteractor {
   static async createNewWishList({ userID, wishListName, items }) {
     if (!items || items.length <= 0) {
       const msg = "Cannot create empty wish list";
@@ -32,12 +32,17 @@ export class UserWishListInteractor {
       return result;
     });
 
-    const dbItemPromise = items.map((i) =>
-      ItemApi.create(i.id, i.type).then((result) => {
-        logger.d("Created new AC Item: ", result);
-        return { ...result, count: i.count };
-      })
-    );
+    const dbItemPromise = items
+      .filter((i) => i.count > 0)
+      .map((i) =>
+        ItemApi.create(i.id, i.type).then((result) => {
+          logger.d("Created new AC Item: ", result);
+          return {
+            id: result,
+            count: i.count,
+          };
+        })
+      );
 
     const [userList, dbItems] = await Promise.all([
       userListPromise,

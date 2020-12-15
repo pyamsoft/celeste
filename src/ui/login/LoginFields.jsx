@@ -7,8 +7,15 @@ export function LoginFields(props) {
   const { onLogin, onEmailChanged, email } = props;
   return (
     <CenteredContainer>
-      <Input className="w-full mb-3" onChange={onEmailChanged} value={email} />
-      <Button className="w-full" onClick={onLogin} />
+      <Input
+        className="w-full mb-3"
+        onChange={onEmailChanged}
+        value={email}
+        placeholder="Enter your email address"
+      />
+      <Button className="w-full" onClick={onLogin}>
+        Login
+      </Button>
     </CenteredContainer>
   );
 }

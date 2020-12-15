@@ -1,7 +1,6 @@
 import { FireDatabase } from "../firebase";
 import { Logger } from "../../util/logger";
 import { newRandomID } from "../../util/id";
-import { distinctBy } from "../../util/callback";
 
 const logger = Logger.tag("UserApi");
 
@@ -48,10 +47,7 @@ export class UserApi {
   }
 
   static watch(id, callback) {
-    const listener = (snapshot) => {
-      const user = snapshot.val();
-      callback(user);
-    };
+    const listener = (snapshot) => callback(snapshot.key, snapshot.val());
 
     const ref = userRef(id);
     ref.on("value", listener);

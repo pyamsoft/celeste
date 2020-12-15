@@ -45,7 +45,7 @@ function isUserInitialized(user) {
 }
 
 async function resolveUser(auth, user) {
-  const resolved = User.fromFirebaseUser(auth, user);
+  const resolved = User.fromFirebase(auth, user);
   if (isUserInitialized(resolved)) {
     return resolved;
   } else {
@@ -53,7 +53,7 @@ async function resolveUser(auth, user) {
     const newUser = await UserApi.create(resolved.id);
     if (newUser) {
       logger.d("New user created: ", newUser);
-      return User.fromFirebaseUser(auth, newUser);
+      return User.fromFirebase(auth, newUser);
     } else {
       logger.e("User could not be created");
       return User.NOT_LOGGED_IN;
@@ -62,7 +62,7 @@ async function resolveUser(auth, user) {
 }
 
 export class AuthInteractor {
-  static listenForAuthChanges(callback) {
+  static listenForAuthChanges({ onAuthChanged }) {
     let latestAuth = User.UNDEFINED;
     let userWatcher = null;
 
@@ -86,17 +86,17 @@ export class AuthInteractor {
         if (stopListening(userWatcher)) {
           userWatcher = null;
         }
-        callback(User.NOT_LOGGED_IN);
+        onAuthChanged(User.NOT_LOGGED_IN);
         return;
       }
 
       const userID = auth.uid;
       if (!userWatcher) {
         logger.d("Begin watching user");
-        userWatcher = UserApi.watch(userID, async (user) => {
-          logger.d("User changed: ", user);
+        userWatcher = UserApi.watch(userID, async (key, user) => {
+          logger.d("User changed: ", key, user);
           const resolved = await resolverDebouncer(user);
-          callback(resolved);
+          onAuthChanged(resolved);
 
           if (!resolved) {
             logger.w("User is null, stop watching user and force re-auth");

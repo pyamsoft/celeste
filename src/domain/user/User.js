@@ -14,7 +14,7 @@ export class User {
     this.shareLink = user?.shareLink || null;
   }
 
-  static fromFirebaseUser(auth, user) {
+  static fromFirebase(auth, user) {
     return new User(auth, user);
   }
 }

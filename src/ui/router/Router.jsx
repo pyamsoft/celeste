@@ -4,19 +4,26 @@ import { Login } from "../login/Login";
 import { Routes } from "./Routes";
 import { User } from "../../domain/user/User";
 import { SignUp } from "../signup/SignUp";
+import { Profile } from "../profile/Profile";
 
 export function Router(props) {
   const { user } = props;
   return (
     <BrowserRouter>
       <Switch>
-        <AppRoute path={Routes.LOGIN} user={user}>
+        <UnauthenticatedAppRoute path={Routes.LOGIN} user={user}>
           <Login {...props} />
-        </AppRoute>
-        <AppRoute path={Routes.SIGN_UP} user={user}>
+        </UnauthenticatedAppRoute>
+
+        <UnauthenticatedAppRoute path={Routes.SIGN_UP} user={user}>
           <SignUp {...props} />
-        </AppRoute>
-        <DefaultRoute />
+        </UnauthenticatedAppRoute>
+
+        <AuthenticatedAppRoute path={Routes.PROFILE} user={user}>
+          <Profile {...props} />
+        </AuthenticatedAppRoute>
+
+        <DefaultRoute {...props} />
       </Switch>
     </BrowserRouter>
   );
@@ -26,10 +33,19 @@ function KickOut() {
   return <Redirect to={Routes.LOGIN} />;
 }
 
-function DefaultRoute() {
+function SignedIn() {
+  return <Redirect to={Routes.PROFILE} />;
+}
+
+function DefaultRoute(props) {
+  const { user } = props;
+  if (user === User.UNDEFINED) {
+    return <AppLoading />;
+  }
+
   return (
     <Route path={Routes.NO_MATCH}>
-      <KickOut />
+      {user === User.NOT_LOGGED_IN ? <KickOut /> : <SignedIn />}
     </Route>
   );
 }
@@ -47,16 +63,30 @@ function AppRoute(props) {
   return <Route path={path}>{children}</Route>;
 }
 
-function ProtectedAppRoute(props) {
+function AuthenticatedAppRoute(props) {
   const { user, path, children } = props;
-
-  if (user === User.UNDEFINED) {
-    return <AppLoading />;
-  }
 
   if (user === User.NOT_LOGGED_IN) {
     return <KickOut />;
   }
 
-  return <Route path={path}>{children}</Route>;
+  return (
+    <AppRoute user={user} path={path}>
+      {children}
+    </AppRoute>
+  );
+}
+
+function UnauthenticatedAppRoute(props) {
+  const { user, path, children } = props;
+
+  if (user !== User.NOT_LOGGED_IN && user !== User.UNDEFINED) {
+    return <SignedIn />;
+  }
+
+  return (
+    <AppRoute user={user} path={path}>
+      {children}
+    </AppRoute>
+  );
 }

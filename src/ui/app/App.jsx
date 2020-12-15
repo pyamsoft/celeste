@@ -20,9 +20,11 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    this.authListener = AuthInteractor.listenForAuthChanges((user) => {
-      logger.d("User updated: ", user);
-      this.setState({ user });
+    this.authListener = AuthInteractor.listenForAuthChanges({
+      onAuthChanged: (user) => {
+        logger.d("User updated: ", user);
+        this.setState({ user });
+      },
     });
   }
 

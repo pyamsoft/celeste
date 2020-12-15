@@ -1,20 +1,20 @@
 import React from "react";
+import { Title } from "../common/Title";
+import { ListItem } from "../common/ListItem";
+import { List } from "../common/List";
+import { Button } from "../common/Button";
 
 export function UserProfile(props) {
   const { user, wishlist, onCreateNewWishList } = props;
   return (
     <div>
-      <div>Profile for: {user.displayName}</div>
-      <ul className="block overflow-auto">
+      <Title>Profile for: {user.displayName}</Title>
+      <List>
         {wishlist.wishlists.map((w) => (
-          <li key={w} className="w-full">
-            {w}
-          </li>
+          <ListItem key={w}>{w}</ListItem>
         ))}
-      </ul>
-      <div className="block w-full">
-        <div onClick={onCreateNewWishList}>New</div>
-      </div>
+      </List>
+      <Button onClick={onCreateNewWishList}>New</Button>
     </div>
   );
 }

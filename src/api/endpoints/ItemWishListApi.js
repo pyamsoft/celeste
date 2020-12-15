@@ -21,14 +21,14 @@ async function get(id) {
 }
 
 export class ItemWishListApi {
-  static async create(wishListID, name, itemIDs) {
+  static async create(wishListID, name, items) {
     try {
       const payload = {
         name,
         items: {},
       };
-      itemIDs.forEach((i) => {
-        payload.items[i] = false;
+      items.forEach((i) => {
+        payload.items[i.id] = i.count;
       });
       await itemlistRef(wishListID).set(payload);
       return await get(wishListID);

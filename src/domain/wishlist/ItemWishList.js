@@ -6,8 +6,8 @@ export class ItemWishList {
     this.name = data?.name || null;
     this.items = data?.items
       ? Object.keys(data.items).map((key) => {
-          const owned = data.items[key];
-          return new Item(key, owned);
+          const count = data.items[key];
+          return new Item(key, count);
         })
       : [];
   }

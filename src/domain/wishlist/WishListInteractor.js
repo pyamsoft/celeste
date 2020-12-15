@@ -35,7 +35,7 @@ export class UserWishListInteractor {
     const dbItemPromise = items.map((i) =>
       ItemApi.create(i.id, i.type).then((result) => {
         logger.d("Created new AC Item: ", result);
-        return result;
+        return { ...result, count: i.count };
       })
     );
 

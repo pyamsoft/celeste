@@ -79,11 +79,8 @@ export class Img extends React.Component {
       <div id={id} onClick={onClick}>
         <div
           ref={this.setRef}
-          className="overflow-hidden relative"
-          style={{
-            paddingBottom: `${ratio}%`,
-            background: `rgba(0, 0,0 ,0.05)`,
-          }}
+          className="overflow-hidden relative bg-gray-100 bg-opacity-10"
+          style={{ paddingBottom: `${ratio}%` }}
         >
           {isVisible && (
             <LoadInImage

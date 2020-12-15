@@ -3,8 +3,7 @@ import { WishListTitle } from "./WishListTitle";
 import { WishListTabs } from "./WishListTabs";
 import { WishListItems } from "./WishListItems";
 
-const defaultClassNames =
-  "wish-list flex flex-col overflow-hidden w-full overflow-hidden";
+const defaultClassNames = "wish-list block overflow-hidden w-full flex-auto";
 
 export function WishListView(props) {
   const { className, style, ...rest } = props;
@@ -14,21 +13,26 @@ export function WishListView(props) {
     items,
     category,
     onCategoryChanged,
-    onItemSelected,
+    onItemAdded,
+    onItemRemoved,
   } = rest;
   return (
     <div
       className={`${defaultClassNames} ${className ? className : ""}`}
       style={style}
     >
-      <WishListTitle name={name} className="mb-3" />
-      <WishListTabs category={category} onTabClicked={onCategoryChanged} />
-      <WishListItems
-        acnh={acnh}
-        items={items}
-        category={category}
-        onItemClicked={onItemSelected}
-      />
+      <div className="h-full w-full overflow-hidden flex flex-col">
+        <WishListTitle name={name} className="mb-3" />
+        <WishListTabs category={category} onTabClicked={onCategoryChanged} />
+        <WishListItems
+          className="flex-auto"
+          acnh={acnh}
+          items={items}
+          category={category}
+          onItemAdded={onItemAdded}
+          onItemRemoved={onItemRemoved}
+        />
+      </div>
     </div>
   );
 }

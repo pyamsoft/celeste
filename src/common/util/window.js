@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 const MARGIN = 32;
 
 function createRemBaseCache() {
@@ -34,4 +36,12 @@ export function fitToWindowHeight(size) {
     return height;
   }
   return inner < size ? height : size;
+}
+
+export function watchResize(onResize) {
+  const resizeCallback = _.throttle(onResize, 200);
+  window.addEventListener("resize", resizeCallback);
+  return function stopWatching() {
+    window.removeEventListener("resize", resizeCallback);
+  };
 }

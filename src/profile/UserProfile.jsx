@@ -2,7 +2,7 @@ import React from "react";
 import { Title } from "../common/component/Title";
 import { ListItem } from "../common/component/ListItem";
 import { VerticalList } from "../common/component/VerticalList";
-import { Button } from "../common/component/Button";
+import { SuccessButton } from "../common/component/Button";
 
 export function UserProfile(props) {
   const { user, wishLists, onCreateNewWishList, onWishListSelected } = props;
@@ -14,7 +14,7 @@ export function UserProfile(props) {
           <WishList key={w.id} wishlist={w} onClick={onWishListSelected} />
         ))}
       </VerticalList>
-      <Button onClick={onCreateNewWishList}>New</Button>
+      <SuccessButton onClick={onCreateNewWishList}>New</SuccessButton>
     </div>
   );
 }

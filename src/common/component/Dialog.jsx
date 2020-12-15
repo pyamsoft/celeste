@@ -1,7 +1,12 @@
 import React from "react";
 import Modal from "react-modal";
 import _ from "lodash";
-import { fitToWindowHeight, fitToWindowWidth } from "../util/window";
+import {
+  fitToWindowHeight,
+  fitToWindowWidth,
+  watchResize,
+} from "../util/window";
+import { stopListening } from "../util/listener";
 
 const {
   outline,
@@ -24,21 +29,23 @@ const defaultClassNames = "block overflow-hidden shadow-2xl p-4 rounded-3xl";
 export class Dialog extends React.Component {
   constructor(props) {
     super(props);
-    this.resizeCallback = _.throttle(() => {
+    this.resizeCallback = null;
+  }
+
+  componentDidMount() {
+    this.resizeCallback = watchResize(() => {
       this.forceUpdate();
       const { onResize } = this.props;
       if (onResize) {
         onResize();
       }
-    }, 200);
-  }
-
-  componentDidMount() {
-    window.addEventListener("resize", this.resizeCallback);
+    });
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.resizeCallback);
+    if (stopListening(this.resizeCallback)) {
+      this.resizeCallback = null;
+    }
   }
 
   closeDialog = () => {
@@ -102,7 +109,7 @@ export class Dialog extends React.Component {
           className ? className : ""
         } focus:outline-none`}
       >
-        <div className="flex flex-col w-full h-full">{children}</div>
+        <div className="block w-full h-full overflow-hidden">{children}</div>
       </Modal>
     );
   }

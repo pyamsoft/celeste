@@ -1,6 +1,6 @@
 import React from "react";
 import { CenteredContainer } from "../common/component/CenteredContainer";
-import { Button } from "../common/component/Button";
+import { Button, SuccessButton } from "../common/component/Button";
 import { Input } from "../common/component/Input";
 
 export function LoginFields(props) {
@@ -15,13 +15,9 @@ export function LoginFields(props) {
         value={email}
         placeholder="Enter your email address"
       />
-      <Button
-        className="w-full btn-green-300 text-white border-green-400"
-        onClick={onLogin}
-        disabled={loggingIn}
-      >
+      <SuccessButton className="w-full" onClick={onLogin} disabled={loggingIn}>
         Login
-      </Button>
+      </SuccessButton>
     </CenteredContainer>
   );
 }

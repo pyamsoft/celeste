@@ -1,20 +1,21 @@
 import React from "react";
-import { Button } from "../common/component/Button";
+import {
+  Button,
+  CancelButton,
+  SuccessButton,
+} from "../common/component/Button";
 
 export function WishListSaveRow(props) {
   const { onCancel, onSave, isCreating, className, style } = props;
   return (
     <div className={`block w-full ${className ? className : ""}`} style={style}>
       <div className="flex flex-row flex-nowrap w-full">
-        <Button className="ml-auto" onClick={onCancel}>
+        <CancelButton className="ml-auto" onClick={onCancel}>
           Cancel
-        </Button>
-        <Button
-          className="ml-3 bg-green-300 text-white border-green-400"
-          onClick={onSave}
-        >
+        </CancelButton>
+        <SuccessButton className="ml-3" onClick={onSave}>
           {isCreating ? "Create" : "Save"}
-        </Button>
+        </SuccessButton>
       </div>
     </div>
   );

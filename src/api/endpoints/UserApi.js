@@ -32,9 +32,7 @@ export class UserApi {
 
   static async update(user) {
     try {
-      await userRef(user.id).set({
-        displayName: user.displayName,
-      });
+      await userRef(user.id).set({ displayName: user.displayName });
       return true;
     } catch (e) {
       logger.e(e, "Failed to update user");

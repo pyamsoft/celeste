@@ -1,6 +1,6 @@
 export class ACItem {
   constructor(data) {
-    this.acID = data.id || null;
+    this.id = data.id || null;
     this.type = data.type || null;
   }
 

@@ -24,7 +24,7 @@ export class ItemApi {
   static async update(item) {
     try {
       await itemRef(item.id).set({
-        id: item.acID,
+        id: item.id,
         type: item.type,
       });
     } catch (e) {

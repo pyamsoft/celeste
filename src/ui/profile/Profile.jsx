@@ -28,6 +28,12 @@ export class Profile extends React.Component {
   }
 
   handleCreateNewWishList = () => {
+    this.handleSubmitNewWishList("New List Hello", [
+      {
+        id: "TEST-HELLO",
+        type: "fish",
+      },
+    ]);
     this.setState({ creating: true });
   };
 
@@ -38,11 +44,12 @@ export class Profile extends React.Component {
   handleSubmitNewWishList = async (name, items) => {
     const { user } = this.props;
     try {
-      await UserWishListInteractor.createNewWishList({
+      const result = await UserWishListInteractor.createNewWishList({
         userID: user.id,
         wishListName: name,
         items,
       });
+      logger.d("New wish list created:", result);
     } catch (e) {
       logger.e(e, "Error creating new wish list");
     }

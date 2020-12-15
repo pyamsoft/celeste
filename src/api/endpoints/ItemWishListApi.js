@@ -10,8 +10,10 @@ function itemlistRef(id) {
 async function get(id) {
   try {
     const snapshot = await itemlistRef(id).once("value");
-    const user = snapshot.val();
-    return user;
+    return {
+      key: snapshot.key,
+      value: snapshot.val(),
+    };
   } catch (e) {
     logger.e(e, "Failed to get itemlist for id: ", id);
     return null;
@@ -34,6 +36,10 @@ export class ItemWishListApi {
       logger.e(e, "Failed to create itemlist reference");
       return null;
     }
+  }
+
+  static async markOwned(wishListID, itemID, owned) {
+    await itemlistRef(wishListID).child(itemID).set(owned);
   }
 
   static watch(userID, callback) {

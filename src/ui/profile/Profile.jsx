@@ -6,6 +6,7 @@ import { UserProfile } from "./UserProfile";
 import { WishListInteractor } from "../../domain/wishlist/WishListInteractor";
 import { stopListening } from "../../util/listener";
 import { ItemWishListInteractor } from "../../domain/wishlist/ItemWishListInteractor";
+import { WishListEditorDialog } from "../wishlist/WishListEditorDialog";
 
 const logger = Logger.tag("Profile");
 
@@ -13,7 +14,7 @@ export class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      creating: false,
+      selected: null,
       submitted: false,
 
       userList: null,
@@ -94,12 +95,16 @@ export class Profile extends React.Component {
     }
   };
 
-  handleCreateNewWishList = () => {
-    this.setState({ creating: true });
+  handleWishListSelected = (wishlist) => {
+    this.setState({ selected: wishlist });
   };
 
-  handleCancelNewWishList = () => {
-    this.setState({ creating: false });
+  handleCreateNewWishList = () => {
+    this.handleWishListSelected({});
+  };
+
+  handleCloseWishList = () => {
+    this.setState({ selected: null });
   };
 
   handleSubmitNewWishList = (name, items) => {
@@ -127,7 +132,7 @@ export class Profile extends React.Component {
 
   render() {
     const { user } = this.props;
-    const { wishLists } = this.state;
+    const { wishLists, selected } = this.state;
     return (
       <div className="w-full h-full overflow-hidden">
         {!wishLists || wishLists.length <= 0 ? (
@@ -136,7 +141,15 @@ export class Profile extends React.Component {
           <UserProfile
             user={user}
             wishLists={wishLists}
+            onWishListSelected={this.handleWishListSelected}
             onCreateNewWishList={this.handleCreateNewWishList}
+          />
+        )}
+
+        {!!selected && (
+          <WishListEditorDialog
+            onClose={this.handleCloseWishList}
+            wishlist={selected}
           />
         )}
       </div>

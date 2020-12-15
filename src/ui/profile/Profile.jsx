@@ -4,6 +4,8 @@ import { Logger } from "../../util/logger";
 import { ProfileLoading } from "./ProfileLoading";
 import { UserProfile } from "./UserProfile";
 import { WishListInteractor } from "../../domain/wishlist/WishListInteractor";
+import { stopListening } from "../../util/listener";
+import { ItemWishListInteractor } from "../../domain/wishlist/ItemWishListInteractor";
 
 const logger = Logger.tag("Profile");
 
@@ -12,29 +14,87 @@ export class Profile extends React.Component {
     super(props);
     this.state = {
       creating: false,
-      wishlist: null,
+      submitted: false,
+
+      userList: null,
+      wishLists: null,
     };
+
+    this.userListListener = null;
+    this.itemListListeners = {};
   }
 
   componentDidMount() {
     const { user } = this.props;
-    UserWishListInteractor.listenForWishListChanges({
+    this.userListListener = UserWishListInteractor.watch({
       userID: user.id,
-      onWishListChanged: (wishlist) => {
-        logger.d("Wishlist updated: ", wishlist);
-        this.setState({ wishlist });
+      onWishListChanged: (userList) => {
+        logger.d("User list updated: ", userList);
+        this.setState({ userList }, () => {
+          this.createDefaultWishList();
+          this.registerItemListeners();
+        });
       },
     });
   }
 
+  componentWillUnmount() {
+    if (stopListening(this.userListListener)) {
+      this.userListListener = null;
+    }
+
+    Object.keys(this.itemListListeners).forEach((i) => {
+      const listener = this.itemListListeners[i];
+      if (stopListening(listener)) {
+        this.itemListListeners[i] = null;
+      }
+    });
+    this.itemListListeners = {};
+  }
+
+  registerItemListeners = () => {
+    if (this.itemListListeners.length > 0) {
+      return;
+    }
+
+    const { userList } = this.state;
+    if (!userList) {
+      return;
+    }
+
+    userList.wishlists.forEach((wID) => {
+      if (!this.itemListListeners[wID]) {
+        this.itemListListeners[wID] = ItemWishListInteractor.watch({
+          wishListID: wID,
+          onWishListChanged: (list) => {
+            logger.d("Item list updated: ", list);
+            const { wishLists } = this.state;
+            const newList = wishLists || [];
+            const index = newList.findIndex((w) => w.id === list.id);
+            if (index >= 0) {
+              newList[index] = list;
+            } else {
+              newList.push(list);
+            }
+            this.setState({ wishLists: newList });
+          },
+        });
+      }
+    });
+  };
+
+  createDefaultWishList = () => {
+    const { userList } = this.state;
+    if (!userList) {
+      return;
+    }
+
+    if (!userList.wishlists || userList.wishlists.length <= 0) {
+      this.handleSubmitNewWishList("My Wishlist", []);
+    }
+  };
+
   handleCreateNewWishList = () => {
-    this.handleSubmitNewWishList("New List Hello", [
-      {
-        id: "TEST-HELLO",
-        type: "fish",
-        count: 3,
-      },
-    ]);
     this.setState({ creating: true });
   };
 
@@ -42,31 +102,40 @@ export class Profile extends React.Component {
     this.setState({ creating: false });
   };
 
-  handleSubmitNewWishList = async (name, items) => {
-    const { user } = this.props;
-    try {
-      const result = await WishListInteractor.createNewWishList({
-        userID: user.id,
-        wishListName: name,
-        items,
-      });
-      logger.d("New wish list created:", result);
-    } catch (e) {
-      logger.e(e, "Error creating new wish list");
+  handleSubmitNewWishList = (name, items) => {
+    const { submitted } = this.state;
+    if (submitted) {
+      return;
     }
+
+    this.setState({ submitted: true }, async () => {
+      const { user } = this.props;
+      try {
+        const result = await WishListInteractor.createNewWishList({
+          userID: user.id,
+          wishListName: name,
+          items,
+        });
+        logger.d("New wish list created:", result);
+      } catch (e) {
+        logger.e(e, "Error creating new wish list");
+      } finally {
+        this.setState({ submitted: false });
+      }
+    });
   };
 
   render() {
     const { user } = this.props;
-    const { wishlist } = this.state;
+    const { wishLists } = this.state;
     return (
       <div className="w-full h-full overflow-hidden">
-        {!wishlist ? (
+        {!wishLists || wishLists.length <= 0 ? (
           <ProfileLoading user={user} />
         ) : (
           <UserProfile
             user={user}
-            wishlist={wishlist}
+            wishLists={wishLists}
             onCreateNewWishList={this.handleCreateNewWishList}
           />
         )}

@@ -8,23 +8,17 @@ const logger = Logger.tag("WishListInteractor");
 
 export class WishListInteractor {
   static async createNewWishList({ userID, wishListName, items }) {
-    if (!items || items.length <= 0) {
-      const msg = "Cannot create empty wish list";
-      logger.e(msg);
-      throw new Error(msg);
+    if (!wishListName) {
+      throw new Error("Must provide wish list name");
     }
 
-    if (!wishListName) {
-      const msg = "Must provide wish list name";
-      logger.e(msg);
-      throw new Error(msg);
+    if (!items) {
+      throw new Error("Must provide a list of items (can be empty)");
     }
 
     const trimmed = wishListName.trim();
     if (!trimmed) {
-      const msg = "Must provide wish list name";
-      logger.e(msg);
-      throw new Error(msg);
+      throw new Error("Must provide wish list name");
     }
 
     const userListPromise = UserWishListApi.create(userID).then((result) => {

@@ -1,10 +1,17 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter,
+  Redirect,
+  Route,
+  Switch,
+  withRouter,
+} from "react-router-dom";
 import { Login } from "../login/Login";
 import { Routes } from "./Routes";
 import { User } from "../user/User";
 import { Profile } from "../profile/Profile";
 import { Title } from "../common/component/Title";
+import { WishListPage } from "../wishlist/WishListPage";
 
 export function Router(props) {
   const { user } = props;
@@ -19,10 +26,18 @@ export function Router(props) {
           <Profile {...props} />
         </AuthenticatedAppRoute>
 
+        <AppRoute path={Routes.WISHLIST} user={user}>
+          <WishListPage {...props} />
+        </AppRoute>
+
         <DefaultRoute {...props} />
       </Switch>
     </BrowserRouter>
   );
+}
+
+export function registerRoute(Component) {
+  return withRouter(Component);
 }
 
 function KickOut() {

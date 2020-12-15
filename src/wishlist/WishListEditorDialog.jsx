@@ -3,10 +3,17 @@ import { Dialog } from "../common/component/Dialog";
 import { WishList } from "./WishList";
 
 export function WishListEditorDialog(props) {
-  const { onClose } = props;
+  const { user, acnh, onClose, onCommit, onCreate, wishlist } = props;
   return (
     <Dialog onClose={onClose} className="w-full h-full">
-      <WishList {...props} />
+      <WishList
+        user={user}
+        acnh={acnh}
+        onCommit={onCommit}
+        onCreate={onCreate}
+        onClose={onClose}
+        wishlist={wishlist}
+      />
     </Dialog>
   );
 }

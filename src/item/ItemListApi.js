@@ -7,19 +7,6 @@ function itemlistRef(id) {
   return FireDatabase.ref("/itemlists").child(id);
 }
 
-async function get(id) {
-  try {
-    const snapshot = await itemlistRef(id).once("value");
-    return {
-      key: snapshot.key,
-      value: snapshot.val(),
-    };
-  } catch (e) {
-    logger.e(e, "Failed to get itemlist for id: ", id);
-    return null;
-  }
-}
-
 async function mutateGiftedBy(userID, wishListID, itemID, adjust) {
   const ref = itemlistRef(wishListID).child(itemID);
   await ref.transaction((payload) => {
@@ -49,9 +36,22 @@ export class ItemListApi {
         };
       });
       await itemlistRef(wishListID).set(payload);
-      return await get(wishListID);
+      return await ItemListApi.get(wishListID);
     } catch (e) {
       logger.e(e, "Failed to create itemlist reference");
+      return null;
+    }
+  }
+
+  static async get(wishListID) {
+    try {
+      const snapshot = await itemlistRef(wishListID).once("value");
+      return {
+        id: snapshot.key,
+        data: snapshot.val(),
+      };
+    } catch (e) {
+      logger.e(e, "Failed to get itemlist for id: ", wishListID);
       return null;
     }
   }

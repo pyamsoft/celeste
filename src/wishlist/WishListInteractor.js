@@ -45,16 +45,36 @@ export class WishListInteractor {
     ]);
 
     logger.d("Create new wishlist: ", trimmed, dbItems);
-    const { itemID, list } = await ItemListApi.create(
+    const { id, data } = await ItemListApi.create(
       userList,
       wishListName,
       dbItems
     );
 
+    // No data, we failed to create
+    if (!data) {
+      throw new Error("Failed to create new wishlist: " + id);
+    }
+
     return new ItemList({
-      id: itemID,
-      name: list.name,
-      items: list.items,
+      id,
+      name: data.name,
+      items: data.items,
+    });
+  }
+
+  static async get({ itemID }) {
+    const { id, data } = await ItemListApi.get(itemID);
+
+    // No data, does not exist
+    if (!data) {
+      throw new Error("Failed to get wishlist: " + id);
+    }
+
+    return new ItemList({
+      id,
+      name: data.name,
+      items: data.items,
     });
   }
 }

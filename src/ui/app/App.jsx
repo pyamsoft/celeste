@@ -5,23 +5,31 @@ import { Logger } from "../../util/logger";
 import { stopListening } from "../../util/listener";
 import { AppView } from "./AppView";
 import { ACNHInteractor } from "../../domain/acnh/ACNHInteractor";
+import { ACNHFish } from "../../domain/acnh/ACNHFish";
+import { ACNHBug } from "../../domain/acnh/ACNHBug";
+import { ACNHSea } from "../../domain/acnh/ACNHSea";
+import { ACNHFossil } from "../../domain/acnh/ACNHFossil";
+import { ACNHHouseware } from "../../domain/acnh/ACNHHouseware";
+import { ACNHWallmount } from "../../domain/acnh/ACNHWallmount";
 
 const logger = Logger.tag("App");
 
 export class App extends React.Component {
   constructor(props) {
     super(props);
+
+    // All of the AC items
+    const acnh = {};
+    acnh[ACNHFish.TYPE] = [];
+    acnh[ACNHBug.TYPE] = [];
+    acnh[ACNHSea.TYPE] = [];
+    acnh[ACNHFossil.TYPE] = [];
+    acnh[ACNHHouseware.TYPE] = [];
+    acnh[ACNHWallmount.TYPE] = [];
+
     this.state = {
       user: User.UNDEFINED,
-
-      acnh: {
-        fish: [],
-        sea: [],
-        bug: [],
-        fossil: [],
-        house: [],
-        wall: [],
-      },
+      acnh,
     };
 
     this.authListener = null;
@@ -37,12 +45,12 @@ export class App extends React.Component {
       },
     });
 
-    this.loadACNH("fish", ACNHInteractor.getAllFish);
-    this.loadACNH("sea", ACNHInteractor.getAllSea);
-    this.loadACNH("bug", ACNHInteractor.getAllBug);
-    this.loadACNH("fossil", ACNHInteractor.getAllFossil);
-    this.loadACNH("house", ACNHInteractor.getAllHouse);
-    this.loadACNH("wall", ACNHInteractor.getAllWall);
+    this.loadACNH(ACNHFish.TYPE, ACNHInteractor.getAllFish);
+    this.loadACNH(ACNHSea.TYPE, ACNHInteractor.getAllSea);
+    this.loadACNH(ACNHBug.TYPE, ACNHInteractor.getAllBug);
+    this.loadACNH(ACNHFossil.TYPE, ACNHInteractor.getAllFossil);
+    this.loadACNH(ACNHHouseware.TYPE, ACNHInteractor.getAllHouse);
+    this.loadACNH(ACNHWallmount.TYPE, ACNHInteractor.getAllWall);
   }
 
   componentWillUnmount() {

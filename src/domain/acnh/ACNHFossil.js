@@ -1,4 +1,6 @@
 export class ACNHFossil {
+  static TYPE = "fossils";
+
   constructor(data) {
     this.id = data.id || null;
     this.name = data.name

@@ -1,4 +1,6 @@
 export class ACNHSea {
+  static TYPE = "sea";
+
   constructor(data) {
     this.id = data.id || null;
     this.name = data.name

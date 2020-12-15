@@ -1,4 +1,6 @@
 export class ACNHBug {
+  static TYPE = "bugs";
+
   constructor(data) {
     this.id = data.id || null;
     this.name = data.name

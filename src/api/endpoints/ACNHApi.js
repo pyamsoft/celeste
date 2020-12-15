@@ -1,4 +1,10 @@
 import { Logger } from "../../util/logger";
+import { ACNHFish } from "../../domain/acnh/ACNHFish";
+import { ACNHSea } from "../../domain/acnh/ACNHSea";
+import { ACNHBug } from "../../domain/acnh/ACNHBug";
+import { ACNHFossil } from "../../domain/acnh/ACNHFossil";
+import { ACNHHouseware } from "../../domain/acnh/ACNHHouseware";
+import { ACNHWallmount } from "../../domain/acnh/ACNHWallmount";
 
 const logger = Logger.tag("ACNHApi");
 const ROOT_URL = `https://acnhapi.com/v1`;
@@ -55,27 +61,27 @@ function request(category, id) {
 }
 
 function fetchFish(id) {
-  return request("fish", id);
+  return request(ACNHFish.TYPE, id);
 }
 
 function fetchSea(id) {
-  return request("sea", id);
+  return request(ACNHSea.TYPE, id);
 }
 
 function fetchBugs(id) {
-  return request("bugs", id);
+  return request(ACNHBug.TYPE, id);
 }
 
 function fetchFossil(id) {
-  return request("fossils", id);
+  return request(ACNHFossil.TYPE, id);
 }
 
 function fetchHouse(id) {
-  return request("houseware", id);
+  return request(ACNHHouseware.TYPE, id);
 }
 
 function fetchWall(id) {
-  return request("wallmounted", id);
+  return request(ACNHWallmount.TYPE, id);
 }
 
 export class ACNHApi {

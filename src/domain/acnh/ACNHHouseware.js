@@ -1,4 +1,6 @@
 export class ACNHHouseware {
+  static TYPE = "houseware";
+
   constructor(data) {
     this.id = data.id || null;
     this.name = data.name

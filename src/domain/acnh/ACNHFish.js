@@ -1,4 +1,6 @@
 export class ACNHFish {
+  static TYPE = "fish";
+
   constructor(data) {
     this.id = data.id || null;
     this.name = data.name

@@ -102,7 +102,7 @@ export class Dialog extends React.Component {
           className ? className : ""
         } focus:outline-none`}
       >
-        <div className="flex flex-column w-full h-full">{children}</div>
+        <div className="flex flex-col w-full h-full">{children}</div>
       </Modal>
     );
   }

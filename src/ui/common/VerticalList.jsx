@@ -1,8 +1,8 @@
 import React from "react";
 
-const defaultClassNames = "list block overflow-auto";
+const defaultClassNames = "vertical-list block overflow-y-auto overflow-x-hidden";
 
-export function List(props) {
+export function VerticalList(props) {
   const { id, onClick, className, style, children } = props;
   return (
     <ul

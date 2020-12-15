@@ -107,13 +107,23 @@ export class Profile extends React.Component {
     this.setState({ selected: null });
   };
 
-  handleSubmitNewWishList = (name, items) => {
+  handleCommitWishList = (callback) => {
     const { submitted } = this.state;
     if (submitted) {
       return;
     }
 
-    this.setState({ submitted: true }, async () => {
+    this.setState({ submitted: true }, () => {
+      try {
+        callback();
+      } finally {
+        this.setState({ submitted: false });
+      }
+    });
+  };
+
+  handleSubmitNewWishList = (name, items) => {
+    this.handleCommitWishList(async () => {
       const { user } = this.props;
       try {
         const result = await WishListInteractor.createNewWishList({
@@ -124,14 +134,18 @@ export class Profile extends React.Component {
         logger.d("New wish list created:", result);
       } catch (e) {
         logger.e(e, "Error creating new wish list");
-      } finally {
-        this.setState({ submitted: false });
       }
     });
   };
 
+  handleUpdateWishList = (id, name, items) => {
+    this.handleCommitWishList(async () => {
+      logger.d("Update wishlist", id, name, items);
+    });
+  };
+
   render() {
-    const { user } = this.props;
+    const { user, acnh } = this.props;
     const { wishLists, selected } = this.state;
     return (
       <div className="w-full h-full overflow-hidden">
@@ -148,8 +162,12 @@ export class Profile extends React.Component {
 
         {!!selected && (
           <WishListEditorDialog
+            user={user}
+            acnh={acnh}
             onClose={this.handleCloseWishList}
             wishlist={selected}
+            onCreate={this.handleSubmitNewWishList}
+            onCommit={this.handleUpdateWishList}
           />
         )}
       </div>

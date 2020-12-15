@@ -6,7 +6,7 @@ export function CenteredContainer(props) {
     <div
       id={id}
       onClick={onClick}
-      className={`${className ? className : ""} flex flex-column w-full`}
+      className={`${className ? className : ""} flex flex-col w-full`}
       style={style}
     >
       <div className="block m-auto">{children}</div>

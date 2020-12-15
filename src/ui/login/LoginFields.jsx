@@ -15,7 +15,11 @@ export function LoginFields(props) {
         value={email}
         placeholder="Enter your email address"
       />
-      <Button className="w-full" onClick={onLogin} disabled={loggingIn}>
+      <Button
+        className="w-full btn-green-300 text-white border-green-400"
+        onClick={onLogin}
+        disabled={loggingIn}
+      >
         Login
       </Button>
     </CenteredContainer>

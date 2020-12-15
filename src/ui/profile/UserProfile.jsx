@@ -1,7 +1,7 @@
 import React from "react";
 import { Title } from "../common/Title";
 import { ListItem } from "../common/ListItem";
-import { List } from "../common/List";
+import { VerticalList } from "../common/VerticalList";
 import { Button } from "../common/Button";
 
 export function UserProfile(props) {
@@ -9,11 +9,11 @@ export function UserProfile(props) {
   return (
     <div>
       <Title>Profile for: {user.displayName}</Title>
-      <List>
+      <VerticalList>
         {wishLists.map((w) => (
           <WishList key={w.id} wishlist={w} onClick={onWishListSelected} />
         ))}
-      </List>
+      </VerticalList>
       <Button onClick={onCreateNewWishList}>New</Button>
     </div>
   );

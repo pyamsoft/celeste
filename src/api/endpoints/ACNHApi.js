@@ -89,47 +89,23 @@ export class ACNHApi {
     return fetchFish(null);
   }
 
-  static getFish(id) {
-    return fetchFish(id);
-  }
-
   static getAllSea() {
     return fetchSea(null);
-  }
-
-  static getSea(id) {
-    return fetchSea(id);
   }
 
   static getAllBugs() {
     return fetchBugs(null);
   }
 
-  static getBug(id) {
-    return fetchBugs(id);
-  }
-
   static getAllFossils() {
     return fetchFossil(null);
-  }
-
-  static getFossil(id) {
-    return fetchFossil(id);
   }
 
   static getAllHouseware() {
     return fetchHouse(null);
   }
 
-  static getHouseware(id) {
-    return fetchHouse(id);
-  }
-
   static getAllWallmounted() {
     return fetchWall(null);
-  }
-
-  static getWallmounted(id) {
-    return fetchWall(id);
   }
 }

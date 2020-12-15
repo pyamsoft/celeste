@@ -2,7 +2,7 @@ export class ACNHWallmount {
   static TYPE = "wallmounted";
 
   constructor(data) {
-    this.id = data.id || null;
+    this.id = data["internal-id"] || null;
     this.name = data.name
       ? data.name["name-USen"]
           .split(/\s+/)

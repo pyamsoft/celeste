@@ -40,22 +40,9 @@ async function getAll(cache, endpoint, model) {
     .map((item) => model(item));
 }
 
-async function getSingle(cache, id, endpoint, model) {
-  if (!id) {
-    throw new Error("Must provide id for a single call");
-  }
-
-  const item = await cacheWith(cache, id, endpoint);
-  return model(item);
-}
-
 export class ACNHInteractor {
   static async getAllFish() {
     return getAll(fishCache, ACNHApi.getAllFish, ACNHFish.from);
-  }
-
-  static async getFish(id) {
-    return getSingle(fishCache, id, ACNHApi.getFish, ACNHFish.from);
   }
 
   static clearFish() {
@@ -66,20 +53,12 @@ export class ACNHInteractor {
     return getAll(seaCache, ACNHApi.getAllSea, ACNHSea.from);
   }
 
-  static async getSea(id) {
-    return getSingle(seaCache, id, ACNHApi.getSea, ACNHSea.from);
-  }
-
   static clearSea() {
     return clearCache(seaCache);
   }
 
   static async getAllBug() {
     return getAll(bugCache, ACNHApi.getAllBugs, ACNHBug.from);
-  }
-
-  static async getBug(id) {
-    return getSingle(bugCache, id, ACNHApi.getBug, ACNHBug.from);
   }
 
   static clearBug() {
@@ -90,20 +69,14 @@ export class ACNHInteractor {
     return getAll(fossilCache, ACNHApi.getAllFossils, ACNHFossil.from);
   }
 
-  static async getFossil(id) {
-    return getSingle(fossilCache, id, ACNHApi.getFossil, ACNHFossil.from);
-  }
-
   static clearFossil() {
     return clearCache(bugCache);
   }
 
   static async getAllHouse() {
-    return getAll(houseCache, ACNHApi.getAllHouseware, ACNHHouseware.from);
-  }
-
-  static async getHouse(id) {
-    return getSingle(houseCache, id, ACNHApi.getHouseware, ACNHHouseware.from);
+    return getAll(houseCache, ACNHApi.getAllHouseware, (series) => {
+      return series.map((s) => ACNHHouseware.from(s)).flatMap((s) => s)[0];
+    });
   }
 
   static clearHouse() {
@@ -111,11 +84,9 @@ export class ACNHInteractor {
   }
 
   static async getAllWall() {
-    return getAll(wallCache, ACNHApi.getAllWallmounted, ACNHWallmount.from);
-  }
-
-  static async getWall(id) {
-    return getSingle(wallCache, id, ACNHApi.getWallmounted, ACNHWallmount.from);
+    return getAll(wallCache, ACNHApi.getAllWallmounted, (series) => {
+      return series.map((s) => ACNHWallmount.from(s)).flatMap((s) => s)[0];
+    });
   }
 
   static clearWall() {

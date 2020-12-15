@@ -11,6 +11,7 @@ import { ACNHSea } from "../../domain/acnh/ACNHSea";
 import { ACNHFossil } from "../../domain/acnh/ACNHFossil";
 import { ACNHHouseware } from "../../domain/acnh/ACNHHouseware";
 import { ACNHWallmount } from "../../domain/acnh/ACNHWallmount";
+import { Img } from "../common/Img";
 
 const logger = Logger.tag("App");
 
@@ -82,7 +83,28 @@ export class App extends React.Component {
     return (
       <React.StrictMode>
         <AppView user={user} acnh={acnh} />
+        <ImagePreload acnh={acnh} />
       </React.StrictMode>
     );
   }
+}
+
+function ImagePreload(props) {
+  const { acnh } = props;
+  return (
+    <div>
+      {Object.keys(acnh).map((key) =>
+        acnh[key]
+          .flatMap((item) => item)
+          .map((item) => (
+            <Img
+              key={`${key}-${item.id}`}
+              src={item.image}
+              preload={true}
+              alt={item.name}
+            />
+          ))
+      )}
+    </div>
+  );
 }

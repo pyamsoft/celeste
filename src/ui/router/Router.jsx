@@ -3,7 +3,6 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { Login } from "../login/Login";
 import { Routes } from "./Routes";
 import { User } from "../../domain/user/User";
-import { SignUp } from "../signup/SignUp";
 import { Profile } from "../profile/Profile";
 import { Title } from "../common/Title";
 

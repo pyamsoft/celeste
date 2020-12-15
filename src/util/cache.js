@@ -1,8 +1,8 @@
-import { CacheMan } from "@runmeetly/cache-man";
+import { CacheMan, MemoryStorageBackend } from "@runmeetly/cache-man";
 
 export function createCache(upstream, timeout) {
   return CacheMan.create(upstream, {
-    timeout,
+    backend: timeout ? MemoryStorageBackend.create(timeout) : null,
   });
 }
 

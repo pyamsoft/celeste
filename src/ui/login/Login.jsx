@@ -15,7 +15,7 @@ export class Login extends React.Component {
   }
 
   handleEmailChanged = (email) => {
-    this.setState({ email });
+    this.setState({ email: email.trim() });
   };
 
   handleLogin = () => {

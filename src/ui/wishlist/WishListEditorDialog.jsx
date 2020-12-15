@@ -43,7 +43,7 @@ export class WishListEditorDialog extends React.Component {
           acnh={acnh}
           name={name}
           items={items}
-          className="flex-auto w-full"
+          className="flex-auto w-full overflow-hidden"
         />
         <WishListSaveRow
           className="mt-3"

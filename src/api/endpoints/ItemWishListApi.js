@@ -20,6 +20,21 @@ async function get(id) {
   }
 }
 
+async function mutateGiftedBy(userID, wishListID, itemID, adjust) {
+  const ref = itemlistRef(wishListID).child(itemID);
+  await ref.transaction((payload) => {
+    if (payload) {
+      if (payload.giftedBy) {
+        const giftedCount = payload.giftedBy[userID] || 0;
+        if (giftedCount > 0 && giftedCount < payload.count) {
+          payload.giftedBy[userID] = adjust(giftedCount);
+        }
+      }
+    }
+    return payload;
+  });
+}
+
 export class ItemWishListApi {
   static async create(wishListID, name, items) {
     try {
@@ -28,7 +43,10 @@ export class ItemWishListApi {
         items: {},
       };
       items.forEach((i) => {
-        payload.items[i.id] = i.count;
+        payload.items[i.id] = {
+          count: i.count,
+          giftedBy: i.giftedBy,
+        };
       });
       await itemlistRef(wishListID).set(payload);
       return await get(wishListID);
@@ -38,8 +56,34 @@ export class ItemWishListApi {
     }
   }
 
-  static async markOwned(wishListID, itemID, owned) {
-    await itemlistRef(wishListID).child(itemID).set(owned);
+  static async updateCount(wishListID, itemID, count) {
+    const ref = itemlistRef(wishListID).child(itemID);
+    await ref.transaction((payload) => {
+      if (payload) {
+        if (payload.count > 0) {
+          payload.count = count;
+        }
+      }
+      return payload;
+    });
+  }
+
+  static async revokeGift(userID, wishListID, itemID) {
+    return await mutateGiftedBy(
+      userID,
+      wishListID,
+      itemID,
+      (count) => count - 1
+    );
+  }
+
+  static async giveGift(userID, wishListID, itemID) {
+    return await mutateGiftedBy(
+      userID,
+      wishListID,
+      itemID,
+      (count) => count + 1
+    );
   }
 
   static watch(wishListID, callback) {

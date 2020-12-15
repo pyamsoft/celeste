@@ -34,6 +34,7 @@ export class WishListInteractor {
           return {
             id: result,
             count: i.count,
+            giftedBy: {},
           };
         })
       );

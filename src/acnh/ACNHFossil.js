@@ -5,7 +5,7 @@ export class ACNHFossil extends ACNHItem {
 
   constructor(data) {
     super({
-      id: data?.id || "",
+      id: data ? data["file-name"] || "" : "",
       name: data?.name["name-USen"] || "",
       price: data?.price || 0,
       image: data?.image_uri || "",

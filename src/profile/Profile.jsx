@@ -4,7 +4,6 @@ import { ProfileLoading } from "./ProfileLoading";
 import { UserProfile } from "./UserProfile";
 import { WishListInteractor } from "../wishlist/WishListInteractor";
 import { stopListening } from "../common/util/listener";
-import { ItemListRealtime } from "../item/ItemListRealtime";
 import { WishListEditorDialog } from "../wishlist/WishListEditorDialog";
 import { ProfileInteractor } from "./ProfileInteractor";
 

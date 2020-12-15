@@ -1,16 +1,13 @@
 // Polyfills
 import "react-app-polyfill/ie11";
 import "react-app-polyfill/stable";
-
+import "intersection-observer";
 // CSS
 import "./index.css";
-
 // Web analytics
 import { reportWebVitals } from "./reportWebVitals";
-
 // API preparation
 import "./firebase";
-
 // Loads the apop
 import "./app";
 

@@ -3,6 +3,7 @@ import { Text } from "../common/component/Text";
 import { Img } from "../common/component/Img";
 import { ACNHHouseware } from "../acnh/ACNHHouseware";
 import { ACNHWallmount } from "../acnh/ACNHWallmount";
+import { remToPx } from "../common/util/window";
 
 function isMultiSeriesCategory(category) {
   return category === ACNHHouseware.TYPE || category === ACNHWallmount.TYPE;
@@ -52,7 +53,7 @@ export function WishListItems(props) {
   );
 }
 
-const ITEM_SIZE = "8rem"; // w-32 h-32
+const ITEM_SIZE = remToPx(8); // w-32 h-32
 const ITEM_STYLE = {
   width: ITEM_SIZE,
   minWidth: ITEM_SIZE,
@@ -79,9 +80,11 @@ class WishListItem extends React.Component {
       >
         <div className="relative w-full h-full hover:text-opacity-100 text-opacity-0 text-black">
           <Img
+            preload={true}
             src={item.image}
-            className="absolute inset-0 z-0"
             alt={item.name}
+            width={ITEM_SIZE}
+            height={ITEM_SIZE}
           />
           <Text className="flex flex-row absolute z-10 bottom-0 left-0 right-0">
             <div className="mx-auto">{item.name}</div>

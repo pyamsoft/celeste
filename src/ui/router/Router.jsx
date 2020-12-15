@@ -5,6 +5,7 @@ import { Routes } from "./Routes";
 import { User } from "../../domain/user/User";
 import { SignUp } from "../signup/SignUp";
 import { Profile } from "../profile/Profile";
+import { Title } from "../common/Title";
 
 export function Router(props) {
   const { user } = props;
@@ -13,10 +14,6 @@ export function Router(props) {
       <Switch>
         <UnauthenticatedAppRoute path={Routes.LOGIN} user={user}>
           <Login {...props} />
-        </UnauthenticatedAppRoute>
-
-        <UnauthenticatedAppRoute path={Routes.SIGN_UP} user={user}>
-          <SignUp {...props} />
         </UnauthenticatedAppRoute>
 
         <AuthenticatedAppRoute path={Routes.PROFILE} user={user}>
@@ -51,7 +48,7 @@ function DefaultRoute(props) {
 }
 
 function AppLoading() {
-  return <div>Loading...</div>;
+  return <Title>Loading...</Title>;
 }
 
 function AppRoute(props) {

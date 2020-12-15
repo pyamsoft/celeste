@@ -68,7 +68,7 @@ export class WishListInteractor {
 
     // No data, does not exist
     if (!data) {
-      throw new Error("Failed to get wishlist: " + id);
+      throw new Error("Failed to get wishlist: " + itemID);
     }
 
     return new ItemList({

@@ -11,11 +11,13 @@ function userRef(id) {
 async function get(id) {
   try {
     const snapshot = await userRef(id).once("value");
-    const user = snapshot.val();
-    return user;
+    return {
+      id: snapshot.key,
+      data: snapshot.val(),
+    };
   } catch (e) {
     logger.e(e, "Failed to get user for id: ", id);
-    return null;
+    return {};
   }
 }
 
@@ -26,7 +28,7 @@ export class UserApi {
       return await get(id);
     } catch (e) {
       logger.e(e, "Failed to create user");
-      return null;
+      return {};
     }
   }
 

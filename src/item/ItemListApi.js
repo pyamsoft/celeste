@@ -39,7 +39,7 @@ export class ItemListApi {
       return await ItemListApi.get(wishListID);
     } catch (e) {
       logger.e(e, "Failed to create itemlist reference");
-      return null;
+      return {};
     }
   }
 
@@ -52,7 +52,7 @@ export class ItemListApi {
       };
     } catch (e) {
       logger.e(e, "Failed to get itemlist for id: ", wishListID);
-      return null;
+      return {};
     }
   }
 

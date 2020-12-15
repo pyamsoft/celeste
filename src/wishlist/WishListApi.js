@@ -26,6 +26,7 @@ export class WishListApi {
         payload[w] = true;
       });
       await userlistRef(userlist.userID).set(payload);
+      return true;
     } catch (e) {
       logger.e(e, "Failed to update userlist reference");
       return false;

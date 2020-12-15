@@ -42,10 +42,10 @@ export class ItemWishListApi {
     await itemlistRef(wishListID).child(itemID).set(owned);
   }
 
-  static watch(userID, callback) {
+  static watch(wishListID, callback) {
     const listener = (snapshot) => callback(snapshot.key, snapshot.val());
 
-    const ref = itemlistRef(userID);
+    const ref = itemlistRef(wishListID);
     ref.on("value", listener);
     return function stopWatching() {
       ref.off("value", listener);

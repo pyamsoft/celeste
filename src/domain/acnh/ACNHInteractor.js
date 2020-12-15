@@ -75,6 +75,8 @@ export class ACNHInteractor {
 
   static async getAllHouse() {
     return getAll(houseCache, ACNHApi.getAllHouseware, (series) => {
+      // This returns as a list of lists, where each list is an item by its variants.
+      // One day we will support this
       return series.map((s) => ACNHHouseware.from(s)).flatMap((s) => s)[0];
     });
   }
@@ -85,6 +87,8 @@ export class ACNHInteractor {
 
   static async getAllWall() {
     return getAll(wallCache, ACNHApi.getAllWallmounted, (series) => {
+      // This returns as a list of lists, where each list is an item by its variants.
+      // One day we will support this
       return series.map((s) => ACNHWallmount.from(s)).flatMap((s) => s)[0];
     });
   }

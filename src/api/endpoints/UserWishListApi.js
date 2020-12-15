@@ -7,22 +7,12 @@ function userlistRef(id) {
   return FireDatabase.ref("/userlists").child(id);
 }
 
-async function get(id) {
-  try {
-    const snapshot = await userlistRef(id).once("value");
-    return snapshot.val();
-  } catch (e) {
-    logger.e(e, "Failed to get userlist for id: ", id);
-    return null;
-  }
-}
-
 export class UserWishListApi {
-  static async create(userID, wishListID) {
+  static async create(userID) {
     try {
       const ref = userlistRef(userID);
-      await ref.child(wishListID).set(true);
-      return await get(userID);
+      const newRef = await ref.push(true);
+      return newRef.key;
     } catch (e) {
       logger.e(e, "Failed to create userlist reference");
       return null;

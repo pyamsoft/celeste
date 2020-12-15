@@ -1,10 +1,13 @@
-export class Item {
-  constructor(key, data) {
-    this.id = key || null;
-    this.type = data.type || null;
+import { ACItem } from "./ACItem";
+
+export class Item extends ACItem {
+  constructor(id, acnhData, dbData) {
+    super(acnhData);
+    this.id = id || null;
+    this.owned = dbData.owned || false;
   }
 
-  static fromFirebase(itemID, val) {
-    return new Item(key, val);
+  static create(dbID, acnhData, dbData) {
+    return new Item(dbID, acnhData, dbData);
   }
 }

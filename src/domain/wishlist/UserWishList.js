@@ -1,7 +1,7 @@
 export class UserWishList {
   constructor(userID, wishlists) {
     this.userID = userID || null;
-    this.wishlists = Object.keys(wishlists) || [];
+    this.wishlists = wishlists ? Object.keys(wishlists) : [];
   }
 
   static fromFirebase(userID, wishlists) {

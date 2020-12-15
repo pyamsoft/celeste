@@ -7,22 +7,14 @@ function itemRef(id) {
   return FireDatabase.ref("/items").child(id);
 }
 
-async function get(id) {
-  try {
-    const snapshot = await itemRef(id).once("value");
-    const user = snapshot.val();
-    return user;
-  } catch (e) {
-    logger.e(e, "Failed to get item for id: ", id);
-    return null;
-  }
-}
-
 export class ItemApi {
-  static async create(id, type) {
+  static async create(acID, type) {
     try {
-      await itemRef(id).set({ type });
-      return await get(id);
+      const newRef = await FireDatabase.ref("/items").push({
+        id: acID,
+        type,
+      });
+      return newRef.key;
     } catch (e) {
       logger.e(e, "Failed to create item reference");
       return null;
@@ -31,7 +23,10 @@ export class ItemApi {
 
   static async update(item) {
     try {
-      await itemRef(item.id).set({ type: item.type });
+      await itemRef(item.id).set({
+        id: item.acID,
+        type: item.type,
+      });
     } catch (e) {
       logger.e(e, "Failed to update item reference");
       return false;

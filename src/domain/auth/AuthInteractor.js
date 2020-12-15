@@ -41,7 +41,7 @@ async function handleProcessLogin(email, url, prompted) {
 }
 
 function isUserInitialized(user) {
-  return user.displayName && user.shareLink;
+  return user.displayName;
 }
 
 async function resolveUser(auth, user) {

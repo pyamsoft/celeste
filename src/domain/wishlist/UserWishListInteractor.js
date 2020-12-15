@@ -1,6 +1,8 @@
 import { Logger } from "../../util/logger";
 import { UserWishListApi } from "../../api/endpoints/UserWishListApi";
 import { UserWishList } from "./UserWishList";
+import { ItemWishListApi } from "../../api/endpoints/ItemWishListApi";
+import { ItemApi } from "../../api/endpoints/ItemApi";
 
 const logger = Logger.tag("UserWishListInteractor");
 
@@ -11,5 +13,46 @@ export class UserWishListInteractor {
       const list = UserWishList.fromFirebase(userID, userlist);
       onWishListChanged(list);
     });
+  }
+
+  static async createNewWishList({ userID, wishListName, items }) {
+    if (!items || items.length <= 0) {
+      const msg = "Cannot create empty wish list";
+      logger.e(msg);
+      throw new Error(msg);
+    }
+
+    if (!wishListName) {
+      const msg = "Must provide wish list name";
+      logger.e(msg);
+      throw new Error(msg);
+    }
+
+    const trimmed = wishListName.trim();
+    if (!trimmed) {
+      const msg = "Must provide wish list name";
+      logger.e(msg);
+      throw new Error(msg);
+    }
+
+    const userListPromise = UserWishListApi.create(userID).then((result) => {
+      logger.d("Created new user list: ", result);
+      return result;
+    });
+
+    const dbItemPromise = items.map((i) =>
+      ItemApi.create(i.acID, i.type).then((result) => {
+        logger.d("Created new AC Item: ", result);
+        return result;
+      })
+    );
+
+    const [userList, dbItems] = await Promise.all([
+      userListPromise,
+      Promise.all(dbItemPromise),
+    ]);
+
+    logger.d("Create new wishlist: ", trimmed, dbItems);
+    await ItemWishListApi.create(userList, wishListName, dbItems);
   }
 }

@@ -11,7 +11,6 @@ export class User {
 
     // Public
     this.displayName = user?.displayName || null;
-    this.shareLink = user?.shareLink || null;
   }
 
   static fromFirebase(auth, user) {

@@ -22,10 +22,7 @@ async function get(id) {
 export class UserApi {
   static async create(id) {
     try {
-      await userRef(id).set({
-        displayName: newRandomID(),
-        shareLink: newRandomID(),
-      });
+      await userRef(id).set({ displayName: newRandomID() });
       return await get(id);
     } catch (e) {
       logger.e(e, "Failed to create user");
@@ -37,7 +34,6 @@ export class UserApi {
     try {
       await userRef(user.id).set({
         displayName: user.displayName,
-        shareLink: user.shareLink,
       });
       return true;
     } catch (e) {

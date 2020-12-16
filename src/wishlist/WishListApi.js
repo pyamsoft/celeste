@@ -81,12 +81,57 @@ export class WishListApi {
     }
   }
 
-  static async update(wishListID, name, items) {
+  static async ownerUpdate(wishListID, name, items) {
     try {
+      const grouped = groupItemsByType(items);
       await wishListRef(wishListID).transaction((payload) => {
         if (payload) {
           payload.name = name;
-          payload = { ...payload, ...groupItemsByType(items) };
+
+          // Do this to make sure we only touch the keys of items we know about
+          // we only touch the count and note of items
+          // we do not touch the giftedBy array since that is not guaranteed to be in sync
+          for (const group of Object.keys(grouped)) {
+            const groupData = grouped[group];
+            for (const series of Object.keys(groupData)) {
+              const seriesData = groupData[series];
+              for (const id of Object.keys(seriesData)) {
+                const data = seriesData[id];
+                if (!payload[group]) {
+                  payload[group] = {};
+                }
+
+                let target = payload[group];
+                if (!target[series]) {
+                  target[series] = {};
+                }
+
+                target = target[series];
+                if (!target[id]) {
+                  target[id] = {};
+                }
+
+                if (data) {
+                  const { count, note, createdAt } = data;
+                  if (count > 0) {
+                    target[id].count = count;
+                    target[id].note = note;
+
+                    if (!target[id].createdAt) {
+                      target[id].createdAt = (createdAt
+                        ? createdAt
+                        : new Date()
+                      ).toUTCString();
+                    }
+                  } else {
+                    target[id] = null;
+                  }
+                } else {
+                  target[id] = null;
+                }
+              }
+            }
+          }
         }
         return payload;
       });

@@ -71,10 +71,10 @@ function NoteButton(props) {
 }
 
 function CountButtons(props) {
-  const { count, handleAdd, handleRemove } = props;
+  const { count, onAdd, onRemove } = props;
   return (
     <div className="flex flex-row flex-nowrap w-full">
-      <IconButton className="ml-2 text-red-500" onClick={handleRemove}>
+      <IconButton className="ml-2 text-red-500" onClick={onRemove}>
         -
       </IconButton>
       <div className="flex-auto" />
@@ -82,7 +82,7 @@ function CountButtons(props) {
         <IconButton className="mx-2 text-white font-bold">{count}</IconButton>
       )}
       <div className="flex-auto" />
-      <IconButton className="mr-2 text-green-500" onClick={handleAdd}>
+      <IconButton className="mr-2 text-green-500" onClick={onAdd}>
         +
       </IconButton>
     </div>

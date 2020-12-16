@@ -30,7 +30,7 @@ export class WishListInteractor {
       throw new Error("Must provide wish list name");
     }
 
-    const { id, data } = await WishListApi.update(
+    const { id, data } = await WishListApi.ownerUpdate(
       wishListID,
       wishListName,
       items

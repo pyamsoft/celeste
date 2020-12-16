@@ -1,12 +1,20 @@
 import React from "react";
 import { Img } from "../../common/component/Img";
-import { Logger } from "../../common/util/logger";
 import { EntryTop } from "./EntryTop";
 import { EntryBottom } from "./EntryBottom";
-
-const logger = Logger.tag("WishListEntry");
+import _ from "lodash";
 
 export class WishListEntry extends React.Component {
+  constructor(props) {
+    super(props);
+    const { note } = props;
+    this.state = {
+      note,
+    };
+
+    this.publishNotesUpdate = _.debounce(this.immediatelyUpdateNotes, 60);
+  }
+
   generateItemStyle = (size) => {
     return {
       width: size,
@@ -30,17 +38,30 @@ export class WishListEntry extends React.Component {
   };
 
   handleNoteChanged = (note) => {
-    const { item, onNoteChanged } = this.props;
-    onNoteChanged(item.updateNote(note));
+    this.setState({ note }, this.publishNotesUpdate);
   };
 
-  handleNoteClicked = () => {
-    const { isEditable } = this.props;
-    logger.d("Note clicked. Is editable? ", isEditable);
+  immediatelyUpdateNotes = () => {
+    const { item, onNoteChanged } = this.props;
+    const { note } = this.state;
+    onNoteChanged(item, note);
   };
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { isEditable } = this.props;
+    if (!isEditable) {
+      // Replace the notes with the props if we cannot edit this notes
+      const { note } = this.state;
+      const { note: newNotes } = this.props;
+      if (newNotes !== note) {
+        this.setState({ note: newNotes });
+      }
+    }
+  }
 
   render() {
-    const { isWishing, item, size, count, note, isEditable } = this.props;
+    const { note } = this.state;
+    const { isWishing, item, size, count, isEditable } = this.props;
     return (
       <div className="p-1 cursor-point" style={this.generateItemStyle(size)}>
         <div
@@ -67,7 +88,6 @@ export class WishListEntry extends React.Component {
             onAdd={this.handleAdd}
             onRemove={this.handleRemove}
             onNoteChanged={this.handleNoteChanged}
-            onNoteClicked={this.handleNoteClicked}
           />
         </div>
       </div>

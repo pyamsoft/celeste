@@ -91,7 +91,6 @@ export class WishListEditorDialog extends React.Component {
       item,
     });
 
-    logger.d("New items: ", newItems);
     this.setState({ items: newItems });
   };
 
@@ -102,7 +101,17 @@ export class WishListEditorDialog extends React.Component {
       item,
     });
 
-    logger.d("New items: ", newItems);
+    this.setState({ items: newItems });
+  };
+
+  handleNoteChanged = async (item, note) => {
+    const { items } = this.state;
+    const newItems = await WishListManageInteractor.itemNotesUpdated({
+      list: items,
+      item,
+      note,
+    });
+
     this.setState({ items: newItems });
   };
 
@@ -119,6 +128,7 @@ export class WishListEditorDialog extends React.Component {
           isEditable={true}
           onItemAdded={this.handleItemAdded}
           onItemRemoved={this.handleItemRemoved}
+          onNoteChanged={this.handleNoteChanged}
         >
           <WishListSaveRow
             className="mt-3"

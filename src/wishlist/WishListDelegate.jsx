@@ -25,6 +25,7 @@ export class WishListDelegate extends React.Component {
       children,
       onItemAdded,
       onItemRemoved,
+      onNoteChanged,
     } = this.props;
     const { category } = this.state;
 
@@ -40,6 +41,7 @@ export class WishListDelegate extends React.Component {
           isEditable={isEditable}
           onItemAdded={onItemAdded}
           onItemRemoved={onItemRemoved}
+          onNoteChanged={onNoteChanged}
           onCategoryChanged={this.handleCategoryChanged}
         />
         {children}

@@ -37,13 +37,22 @@ export class Input extends React.Component {
   };
 
   render() {
-    const { id, className, style, value, disabled, placeholder } = this.props;
+    const {
+      id,
+      className,
+      readOnly,
+      style,
+      value,
+      disabled,
+      placeholder,
+    } = this.props;
     return (
       <input
         id={id}
         className={`${className ? className : ""} ${defaultClassNames}`}
         style={style}
         disabled={disabled}
+        readOnly={readOnly}
         placeholder={placeholder}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}

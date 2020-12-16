@@ -50,4 +50,18 @@ export class WishListManageInteractor {
     }
     return newList;
   }
+
+  static async itemNotesUpdated({ list, item, note }) {
+    // Operate on a copy of the list
+    const newList = list.map((i) => i);
+    const updateIndex = newList.findIndex(
+      (i) =>
+        i.id === item.id && i.type === item.type && i.series === item.series
+    );
+    if (updateIndex >= 0) {
+      const currentItem = newList[updateIndex];
+      newList[updateIndex] = currentItem.updateNote(note);
+    }
+    return newList;
+  }
 }

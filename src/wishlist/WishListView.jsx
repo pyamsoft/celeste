@@ -15,6 +15,7 @@ export function WishListView(props) {
     onCategoryChanged,
     onItemAdded,
     onItemRemoved,
+    onNoteChanged,
     isEditable,
   } = rest;
   return (
@@ -32,6 +33,7 @@ export function WishListView(props) {
           category={category}
           onItemAdded={onItemAdded}
           onItemRemoved={onItemRemoved}
+          onNoteChanged={onNoteChanged}
           isEditable={isEditable}
         />
       </div>

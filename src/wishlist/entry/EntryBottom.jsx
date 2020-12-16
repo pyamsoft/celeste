@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import { remToPx } from "../../common/util/window";
 import { PopOver } from "../../common/component/PopOver";
+import { NotePopup } from "./EntryInfoPopup";
 
 export function EntryBottom(props) {
   const {
@@ -29,7 +30,7 @@ export function EntryBottom(props) {
 }
 
 function NoteButton(props) {
-  const { item, note } = props;
+  const { item, note, isEditable, onNoteChanged } = props;
 
   return (
     <div className="flex flex-row flex-nowrap w-full mb-2 relative">
@@ -56,26 +57,15 @@ function NoteButton(props) {
         )}
       >
         {(popOverOperations) => (
-          <NotePopup {...popOverOperations} item={item} />
+          <NotePopup
+            {...popOverOperations}
+            item={item}
+            note={note}
+            isEditable={isEditable}
+            onNoteChanged={onNoteChanged}
+          />
         )}
       </PopOver>
-    </div>
-  );
-}
-
-function NotePopup(props) {
-  const { item, closePopOver } = props;
-  return (
-    <div className="block w-full h-full">
-      <div className="flex flex-row flex-nowrap">
-        <div className="flex-auto" />
-        <div className="cursor-pointer" onClick={closePopOver}>
-          X
-        </div>
-      </div>
-      <div>
-        Hello: {item.name} {item.price}
-      </div>
     </div>
   );
 }

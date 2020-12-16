@@ -7,10 +7,6 @@ function wishListRef(id) {
   return FireDatabase.ref(FirePaths.WISHLISTS).child(id);
 }
 
-function itemsRef(wishListID, item) {
-  return wishListRef(wishListID).child(item.type).child(item.id);
-}
-
 function groupItemsByType(items) {
   const groups = {};
   for (const item of items) {
@@ -59,6 +55,40 @@ function createWishListID(userID) {
   return FireDatabase.ref(FirePaths.USER_WISHLISTS).child(userID).push().key;
 }
 
+function editItems(payload, items, onEdit) {
+  const grouped = groupItemsByType(items);
+  for (const group of Object.keys(grouped)) {
+    const groupData = grouped[group];
+    for (const series of Object.keys(groupData)) {
+      const seriesData = groupData[series];
+      for (const id of Object.keys(seriesData)) {
+        if (!payload[group]) {
+          payload[group] = {};
+        }
+
+        let target = payload[group];
+        if (!target[series]) {
+          target[series] = {};
+        }
+
+        target = target[series];
+        if (!target[id]) {
+          target[id] = {};
+        }
+
+        const data = seriesData[id];
+        if (data) {
+          target[id] = onEdit(target[id], data);
+        } else {
+          target[id] = null;
+        }
+      }
+    }
+  }
+
+  return payload;
+}
+
 export class WishListApi {
   static async create(userID, name, items) {
     try {
@@ -83,7 +113,6 @@ export class WishListApi {
 
   static async ownerUpdate(wishListID, name, items) {
     try {
-      const grouped = groupItemsByType(items);
       await wishListRef(wishListID).transaction((payload) => {
         if (payload) {
           payload.name = name;
@@ -91,53 +120,77 @@ export class WishListApi {
           // Do this to make sure we only touch the keys of items we know about
           // we only touch the count and note of items
           // we do not touch the giftedBy array since that is not guaranteed to be in sync
-          for (const group of Object.keys(grouped)) {
-            const groupData = grouped[group];
-            for (const series of Object.keys(groupData)) {
-              const seriesData = groupData[series];
-              for (const id of Object.keys(seriesData)) {
-                const data = seriesData[id];
-                if (!payload[group]) {
-                  payload[group] = {};
-                }
-
-                let target = payload[group];
-                if (!target[series]) {
-                  target[series] = {};
-                }
-
-                target = target[series];
-                if (!target[id]) {
-                  target[id] = {};
-                }
-
-                if (data) {
-                  const { count, note, createdAt } = data;
-                  if (count > 0) {
-                    target[id].count = count;
-                    target[id].note = note;
-
-                    if (!target[id].createdAt) {
-                      target[id].createdAt = (createdAt
-                        ? createdAt
-                        : new Date()
-                      ).toUTCString();
-                    }
-                  } else {
-                    target[id] = null;
-                  }
-                } else {
-                  target[id] = null;
-                }
-              }
+          editItems(payload, items, (target, data) => {
+            const { count, note, createdAt } = data;
+            if (count <= 0) {
+              return null;
             }
-          }
+
+            target.count = count;
+            target.note = note;
+
+            // Create the time if it does not exist
+            if (!target.createdAt) {
+              target.createdAt = (createdAt
+                ? new Date(createdAt)
+                : new Date()
+              ).toUTCString();
+            }
+
+            return target;
+          });
         }
         return payload;
       });
       return await WishListApi.get(wishListID);
     } catch (e) {
       logger.e(e, "Failed to update itemlist reference");
+      throw e;
+    }
+  }
+
+  static async gifterUpdate(userID, wishListID, name, items) {
+    try {
+      await wishListRef(wishListID).transaction((payload) => {
+        if (payload) {
+          // Do this to make sure we only touch the keys of items we know about
+          // we only touch the giftedBy field for our user
+          // we do not touch the anything else since it is not guaranteed to be in sync
+          editItems(payload, items, (target, data) => {
+            const { giftedBy, createdAt } = data;
+
+            // Create the time if it does not exist
+            if (!target.createdAt) {
+              target.createdAt = (createdAt
+                ? new Date(createdAt)
+                : new Date()
+              ).toUTCString();
+            }
+
+            // If we changed a gift
+            if (giftedBy) {
+              const ourGiftCount = giftedBy[userID];
+
+              // Make sure it exists
+              if (!target.giftedBy) {
+                target.giftedBy = {};
+              }
+
+              if (ourGiftCount > 0) {
+                target.giftedBy[userID] = ourGiftCount;
+              } else {
+                target.giftedBy[userID] = null;
+              }
+            }
+
+            return target;
+          });
+        }
+
+        return payload;
+      });
+    } catch (e) {
+      logger.e(e, "Failed to update wishlist reference");
       throw e;
     }
   }
@@ -153,55 +206,6 @@ export class WishListApi {
       logger.e(e, "Failed to get itemlist for id: ", wishListID);
       throw e;
     }
-  }
-
-  static async updateCount(wishListID, item) {
-    const ref = itemsRef(wishListID, item);
-    await ref.transaction((payload) => {
-      logger.d("Attempt to update item count: ", item, payload);
-      if (payload) {
-        // If the requested count is now less than 0, this item is no longer requested.
-        if (item.count <= 0) {
-          return null;
-        }
-
-        // Update the requested count
-        payload.count = item.count;
-      }
-      return payload;
-    });
-  }
-
-  static async updateGiftedBy(wishListID, item) {
-    const ref = itemsRef(wishListID, item);
-    return await ref.transaction((payload) => {
-      logger.d("Attempt to update item giftedBy: ", item, payload);
-      // The payload must not be null (ref must exist)
-      // The item.giftedBy field must exist, you did gift someone right?
-      if (payload) {
-        // If the giftedBy field has been removed, delete the giftedBy part from the server.
-        if (!item.giftedBy || Object.keys(item.giftedBy).length <= 0) {
-          payload.giftedBy = null;
-          return payload;
-        }
-
-        // Init the giftedBy object if it does not exist since Firebase will ignore null objects in DB
-        if (!payload.giftedBy) {
-          payload.giftedBy = {};
-        }
-
-        // Write the gift counts to the giftedBy object, ignore if the user is 0
-        for (const userKey of Object.keys(item.giftedBy)) {
-          const userGiftCount = item.giftedBy[userKey];
-          if (userGiftCount > 0) {
-            payload.giftedBy[userKey] = userGiftCount;
-          } else {
-            payload.giftedBy[userKey] = null;
-          }
-        }
-      }
-      return payload;
-    });
   }
 
   static watch(wishListID, callback) {

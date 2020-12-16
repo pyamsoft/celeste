@@ -45,3 +45,32 @@ export function watchResize(onResize) {
     window.removeEventListener("resize", resizeCallback);
   };
 }
+
+export function clickPreventDefault($event) {
+  if (!$event) {
+    return;
+  }
+
+  if (!$event.preventDefault) {
+    return;
+  }
+
+  $event.preventDefault();
+}
+
+export function clickStopPropagation($event) {
+  if (!$event) {
+    return;
+  }
+
+  if (!$event.stopPropagation) {
+    return;
+  }
+
+  $event.stopPropagation();
+}
+
+export function eatClick($event) {
+  clickPreventDefault($event);
+  clickStopPropagation($event);
+}

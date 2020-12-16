@@ -36,6 +36,7 @@ function NoteButton(props) {
     <div className="flex flex-row flex-nowrap w-full mb-2 relative">
       <div className="flex-auto" />
       <PopOver
+        keepInside=".tooltip-boundary"
         closeOnClickOutside={false}
         trigger={({ togglePopOver }) => (
           <div className="need-this-div-or-ref-error">

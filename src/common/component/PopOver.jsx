@@ -49,13 +49,19 @@ export class PopOver extends React.Component {
   }
 
   render() {
-    const { closeOnClickOutside, trigger, children } = this.props;
+    const {
+      position,
+      closeOnClickOutside,
+      trigger,
+      children,
+      keepInside,
+    } = this.props;
     return (
       <StyledPopup
         ref={this.setRef}
         trigger={trigger(this.operations)}
-        position={["top center", "bottom right", "bottom left"]}
-        keepTooltipInside=".popover-boundary"
+        position={position}
+        keepTooltipInside={keepInside}
         closeOnDocumentClick={closeOnClickOutside}
       >
         {typeof children === TYPE_FUNCTION

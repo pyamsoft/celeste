@@ -45,9 +45,11 @@ export class Input extends React.Component {
       value,
       disabled,
       placeholder,
+      ...rest
     } = this.props;
     return (
       <input
+        {...rest}
         id={id}
         className={`${className ? className : ""} ${defaultClassNames}`}
         style={style}

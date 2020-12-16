@@ -7,6 +7,7 @@ import { WishListInteractor } from "./WishListInteractor";
 import { ProfileInteractor } from "../profile/ProfileInteractor";
 import { stopListening } from "../common/util/listener";
 import { WishListGiftInteractor } from "./WishListGiftInteractor";
+import _ from "lodash";
 
 const logger = Logger.tag("WishListPage");
 
@@ -17,9 +18,12 @@ class WishListController extends React.Component {
       loading: false,
       wishlist: null,
       error: null,
+
+      committing: false,
     };
 
     this.wishListListener = null;
+    this.publishGiftUpdated = _.debounce(this.updateGiftedByAmounts, 200);
   }
 
   componentDidMount() {
@@ -31,6 +35,8 @@ class WishListController extends React.Component {
     if (stopListening(this.wishListListener)) {
       this.wishListListener = null;
     }
+
+    this.publishGiftUpdated.cancel();
   }
 
   loadWishList = (id) => {
@@ -94,15 +100,18 @@ class WishListController extends React.Component {
     }
 
     const { wishlist } = this.state;
-    this.setState({
-      wishlist: wishlist.updateItems(
-        await WishListGiftInteractor.giftAdded({
-          userID: user.id,
-          list: wishlist.items,
-          item,
-        })
-      ),
-    });
+    this.setState(
+      {
+        wishlist: wishlist.updateItems(
+          await WishListGiftInteractor.giftAdded({
+            userID: user.id,
+            list: wishlist.items,
+            item,
+          })
+        ),
+      },
+      this.publishGiftUpdated
+    );
   };
 
   handleItemRemoved = async (item) => {
@@ -113,14 +122,44 @@ class WishListController extends React.Component {
     }
 
     const { wishlist } = this.state;
-    this.setState({
-      wishlist: wishlist.updateItems(
-        await WishListGiftInteractor.giftRemoved({
+    this.setState(
+      {
+        wishlist: wishlist.updateItems(
+          await WishListGiftInteractor.giftRemoved({
+            userID: user.id,
+            list: wishlist.items,
+            item,
+          })
+        ),
+      },
+      this.publishGiftUpdated
+    );
+  };
+
+  updateGiftedByAmounts = () => {
+    const { user } = this.props;
+    if (!user) {
+      logger.w("Missing user, you must sign in to do gift things.");
+      return;
+    }
+
+    const { committing, wishlist } = this.state;
+    if (committing) {
+      return;
+    }
+    this.setState({ committing: true }, async () => {
+      try {
+        await WishListInteractor.giftUpdateWishList({
           userID: user.id,
-          list: wishlist.items,
-          item,
-        })
-      ),
+          wishListID: wishlist.id,
+          items: wishlist.items,
+        });
+        logger.d("Published new gifted by amounts");
+      } catch (e) {
+        logger.e(e, "Unable to gift new items");
+      } finally {
+        this.setState({ committing: false });
+      }
     });
   };
 

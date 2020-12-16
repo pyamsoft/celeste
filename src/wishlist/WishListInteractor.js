@@ -4,12 +4,9 @@ import { WishList } from "./WishList";
 
 const logger = Logger.tag("WishListInteractor");
 
-function validate(userID, wishListName, items) {
+function validate(userID, items) {
   if (!userID) {
     throw new Error("Must provide wish list owner ID");
-  }
-  if (!wishListName) {
-    throw new Error("Must provide wish list name");
   }
 
   if (!items) {
@@ -18,11 +15,20 @@ function validate(userID, wishListName, items) {
 }
 
 export class WishListInteractor {
-  static async updateWishList({ userID, wishListID, wishListName, items }) {
-    validate(userID, wishListName, items);
+  static async ownerUpdateWishList({
+    userID,
+    wishListID,
+    wishListName,
+    items,
+  }) {
+    validate(userID, items);
 
     if (!wishListID) {
       throw new Error("Must provide existing wish list ID");
+    }
+
+    if (!wishListName) {
+      throw new Error("Must provide wish list name");
     }
 
     const trimmed = wishListName.trim();
@@ -30,22 +36,29 @@ export class WishListInteractor {
       throw new Error("Must provide wish list name");
     }
 
-    const { id, data } = await WishListApi.ownerUpdate(
-      wishListID,
-      wishListName,
-      items
-    );
+    await WishListApi.ownerUpdate(wishListID, wishListName, items);
+  }
 
-    // No data, we failed to create
-    if (!data) {
-      throw new Error("Failed to update existing wishlist: " + wishListID);
+  static async giftUpdateWishList({ userID, wishListID, items }) {
+    validate(userID, items);
+
+    if (!wishListID) {
+      throw new Error("Must provide existing wish list ID");
     }
 
-    return new WishList({ ...data, id });
+    if (!userID) {
+      throw new Error("Must provide gifting user ID");
+    }
+
+    await WishListApi.gifterUpdate(userID, wishListID, items);
   }
 
   static async createNewWishList({ userID, wishListName, items }) {
-    validate(userID, wishListName, items);
+    validate(userID, items);
+
+    if (!wishListName) {
+      throw new Error("Must provide wish list name");
+    }
 
     const trimmed = wishListName.trim();
     if (!trimmed) {
@@ -55,18 +68,7 @@ export class WishListInteractor {
     const validItems = items.filter((i) => i.count > 0);
 
     logger.d("Create new wishlist: ", userID, trimmed, validItems);
-    const { id, data } = await WishListApi.create(
-      userID,
-      wishListName,
-      validItems
-    );
-
-    // No data, we failed to create
-    if (!data) {
-      throw new Error("Failed to create new wishlist for user: " + userID);
-    }
-
-    return new WishList({ ...data, id });
+    await WishListApi.create(userID, wishListName, validItems);
   }
 
   static async get({ itemID }) {

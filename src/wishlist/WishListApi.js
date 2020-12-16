@@ -104,7 +104,6 @@ export class WishListApi {
       updates[`${FirePaths.USER_WISHLISTS}/${userID}/${wishListID}`] = now;
       updates[`${FirePaths.WISHLISTS}/${wishListID}`] = payload;
       await FireDatabase.ref().update(updates);
-      return await WishListApi.get(wishListID);
     } catch (e) {
       logger.e(e, "Failed to create itemlist reference");
       throw e;
@@ -144,14 +143,13 @@ export class WishListApi {
         }
         return payload;
       });
-      return await WishListApi.get(wishListID);
     } catch (e) {
       logger.e(e, "Failed to update itemlist reference");
       throw e;
     }
   }
 
-  static async gifterUpdate(userID, wishListID, name, items) {
+  static async gifterUpdate(userID, wishListID, items) {
     try {
       await wishListRef(wishListID).transaction((payload) => {
         if (payload) {

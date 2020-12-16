@@ -6,6 +6,7 @@ import { ACNHWallmount } from "../acnh/ACNHWallmount";
 import { fitToWindowWidth, remToPx, watchResize } from "../common/util/window";
 import { EmptyButton } from "../common/component/Button";
 import { stopListening } from "../common/util/listener";
+import { Logger } from "../common/util/logger";
 
 function isMultiSeriesCategory(category) {
   return category === ACNHHouseware.TYPE || category === ACNHWallmount.TYPE;

@@ -1,3 +1,5 @@
+import { asID } from "../common/util/id";
+
 export class PartialUser {
   #id;
   #displayName;
@@ -8,7 +10,7 @@ export class PartialUser {
   }
 
   get id() {
-    return this.#id;
+    return asID(this.#id);
   }
 
   get displayName() {

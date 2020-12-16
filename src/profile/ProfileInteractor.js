@@ -9,8 +9,8 @@ export class ProfileInteractor {
     return UserWishListRealtime.watch(userID, onUserListChange);
   }
 
-  static watchWishList({ itemID, onItemListChange }) {
-    return WishListRealtime.watch(itemID, onItemListChange);
+  static watchWishList({ itemID, onInsertOrUpdate, onDelete }) {
+    return WishListRealtime.watch(itemID, onInsertOrUpdate, onDelete);
   }
 
   static async createDefaultUserWishList({ userID }) {

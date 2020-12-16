@@ -54,7 +54,18 @@ export class WishListEditorDialog extends React.Component {
 
   handleUpdateWishList = (id, name, items) => {
     this.handleCommitWishList(async () => {
-      logger.d("Update wishlist", id, name, items);
+      const { user } = this.props;
+      try {
+        const result = await WishListInteractor.updateWishList({
+          userID: user.id,
+          wishListID: id,
+          wishListName: name,
+          items,
+        });
+        logger.d("New wish list created:", result);
+      } catch (e) {
+        logger.e(e, "Error creating new wish list");
+      }
     }, this.handleClose);
   };
 

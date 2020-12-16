@@ -85,12 +85,13 @@ export class Profile extends React.Component {
       return;
     }
 
-    userList.wishlists.forEach((wID) => {
+    userList.wishlists.forEach((wishlist) => {
+      const wID = wishlist.id;
       if (!this.itemListListeners[wID]) {
         this.itemListListeners[wID] = ProfileInteractor.watchWishList({
           itemID: wID,
-          onItemListChange: (list) => {
-            logger.d("WishListItem list updated: ", list);
+          onInsertOrUpdate: (list) => {
+            logger.d("WishList list inserted/updated: ", list);
             const { wishLists } = this.state;
             const newList = wishLists || [];
             const index = newList.findIndex((w) => w.id === list.id);
@@ -98,6 +99,16 @@ export class Profile extends React.Component {
               newList[index] = list;
             } else {
               newList.push(list);
+            }
+            this.setState({ wishLists: newList });
+          },
+          onDelete: (listID) => {
+            logger.d("WishList list deleted ", listID);
+            const { wishLists } = this.state;
+            const newList = wishLists || [];
+            const index = newList.findIndex((w) => w.id === listID);
+            if (index >= 0) {
+              newList.splice(index, 1);
             }
             this.setState({ wishLists: newList });
           },

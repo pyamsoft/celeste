@@ -25,23 +25,10 @@ export class UserWishListApi {
   static async create(userID) {
     try {
       const ref = userlistRef(userID);
-      const newRef = await ref.push(true);
+      const newRef = await ref.push(new Date().toUTCString());
       return newRef.key;
     } catch (e) {
       logger.e(e, "Failed to create userlist reference");
-      throw e;
-    }
-  }
-
-  static async update(userlist) {
-    try {
-      const payload = {};
-      userlist.wishlists.forEach((w) => {
-        payload[w] = true;
-      });
-      await userlistRef(userlist.userID).set(payload);
-    } catch (e) {
-      logger.e(e, "Failed to update userlist reference");
       throw e;
     }
   }

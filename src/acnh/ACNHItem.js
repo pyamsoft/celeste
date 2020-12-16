@@ -1,4 +1,5 @@
 import { sentenceCase } from "../common/util/string";
+import { asID } from "../common/util/id";
 
 export class ACNHItem {
   #id;
@@ -18,7 +19,7 @@ export class ACNHItem {
   }
 
   get id() {
-    return this.#id;
+    return asID(this.#id);
   }
 
   get name() {

@@ -5,14 +5,25 @@ import { WishList } from "./WishList";
 
 const logger = Logger.tag("WishListInteractor");
 
-export class WishListInteractor {
-  static async createNewWishList({ userID, wishListName, items }) {
-    if (!wishListName) {
-      throw new Error("Must provide wish list name");
-    }
+function validate(userID, wishListName, items) {
+  if (!userID) {
+    throw new Error("Must provide wish list owner ID");
+  }
+  if (!wishListName) {
+    throw new Error("Must provide wish list name");
+  }
 
-    if (!items) {
-      throw new Error("Must provide a list of items (can be empty)");
+  if (!items) {
+    throw new Error("Must provide a list of items (can be empty)");
+  }
+}
+
+export class WishListInteractor {
+  static async updateWishList({ userID, wishListID, wishListName, items }) {
+    validate(userID, wishListName, items);
+
+    if (!wishListID) {
+      throw new Error("Must provide existing wish list ID");
     }
 
     const trimmed = wishListName.trim();
@@ -20,19 +31,45 @@ export class WishListInteractor {
       throw new Error("Must provide wish list name");
     }
 
-    const userList = await UserWishListApi.create(userID);
+    const { id, data } = await WishListApi.update(
+      wishListID,
+      wishListName,
+      items
+    );
+
+    // No data, we failed to create
+    if (!data) {
+      throw new Error("Failed to update existing wishlist: " + wishListID);
+    }
+
+    return new WishList({
+      id,
+      name: data.name,
+      items: data.items,
+    });
+  }
+  static async createNewWishList({ userID, wishListName, items }) {
+    validate(userID, wishListName, items);
+
+    const trimmed = wishListName.trim();
+    if (!trimmed) {
+      throw new Error("Must provide wish list name");
+    }
+
+    const userListID = await UserWishListApi.create(userID);
     const validItems = items.filter((i) => i.count > 0);
 
     logger.d("Create new wishlist: ", userID, trimmed, validItems);
     const { id, data } = await WishListApi.create(
-      userList,
+      userListID,
+      userID,
       wishListName,
       validItems
     );
 
     // No data, we failed to create
     if (!data) {
-      throw new Error("Failed to create new wishlist: " + id);
+      throw new Error("Failed to create new wishlist: " + userListID);
     }
 
     return new WishList({

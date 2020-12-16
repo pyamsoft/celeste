@@ -1,3 +1,5 @@
+import { asID } from "../common/util/id";
+
 export class Auth {
   #id;
   #email;
@@ -7,12 +9,16 @@ export class Auth {
   constructor(data) {
     this.#id = data?.uid || "";
     this.#email = data?.email || "";
-    this.#createdAt = data?.metadata?.creationTime || "";
-    this.#lastLogin = data?.metadata?.lastSignInTime || "";
+    this.#createdAt = data?.metadata?.creationTime
+      ? new Date(data.metadata.creationTime)
+      : null;
+    this.#lastLogin = data?.metadata?.lastSignInTime
+      ? new Date(data.metadata.lastSignInTime)
+      : null;
   }
 
   get id() {
-    return this.#id;
+    return asID(this.#id);
   }
 
   get email() {

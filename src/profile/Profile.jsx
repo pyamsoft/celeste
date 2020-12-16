@@ -11,6 +11,7 @@ export class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      creating: false,
       selected: null,
 
       userList: null,
@@ -23,7 +24,7 @@ export class Profile extends React.Component {
 
   componentDidMount() {
     const { user } = this.props;
-    this.userListListener = ProfileInteractor.watchUserList({
+    this.userListListener = ProfileInteractor.watchUserWishList({
       userID: user.id,
       onUserListChange: (userList) => {
         logger.d("User list updated: ", userList);
@@ -32,7 +33,27 @@ export class Profile extends React.Component {
         });
       },
     });
+
+    this.createDefaultUserWishList();
   }
+
+  createDefaultUserWishList = () => {
+    const { creating } = this.state;
+    if (creating) {
+      return;
+    }
+
+    this.setState({ creating: true }, async () => {
+      const { user } = this.props;
+      try {
+        await ProfileInteractor.createDefaultUserWishList({ userID: user.id });
+      } catch (e) {
+        logger.e(e, "Failed to create default user wish list");
+      } finally {
+        this.setState({ creating: false });
+      }
+    });
+  };
 
   componentWillUnmount() {
     if (stopListening(this.userListListener)) {
@@ -66,7 +87,7 @@ export class Profile extends React.Component {
 
     userList.wishlists.forEach((wID) => {
       if (!this.itemListListeners[wID]) {
-        this.itemListListeners[wID] = ProfileInteractor.watchItemList({
+        this.itemListListeners[wID] = ProfileInteractor.watchWishList({
           itemID: wID,
           onItemListChange: (list) => {
             logger.d("WishListItem list updated: ", list);

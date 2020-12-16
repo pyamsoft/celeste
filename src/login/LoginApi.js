@@ -38,14 +38,12 @@ async function handleProcessLogin(email, url, prompted) {
 
 export class LoginApi {
   static async login(email) {
-    const result = await AuthApi.sendLoginEmail(email);
-    if (result) {
+    try {
+      await AuthApi.sendLoginEmail(email);
       await Storage.set(STORAGE_KEY_EMAIL, email);
-    } else {
+    } catch (e) {
       await Storage.remove(STORAGE_KEY_EMAIL);
     }
-
-    return result;
   }
 
   static async processLogin() {

@@ -17,7 +17,7 @@ async function get(id) {
     };
   } catch (e) {
     logger.e(e, "Failed to get user for id: ", id);
-    return {};
+    throw e;
   }
 }
 
@@ -28,17 +28,16 @@ export class UserApi {
       return await get(id);
     } catch (e) {
       logger.e(e, "Failed to create user");
-      return {};
+      throw e;
     }
   }
 
   static async update(user) {
     try {
       await userRef(user.id).set({ displayName: user.displayName });
-      return true;
     } catch (e) {
       logger.e(e, "Failed to update user");
-      return false;
+      throw e;
     }
   }
 

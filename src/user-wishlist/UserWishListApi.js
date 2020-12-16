@@ -8,6 +8,20 @@ function userlistRef(id) {
 }
 
 export class UserWishListApi {
+  static async get(userID) {
+    try {
+      const ref = userlistRef(userID);
+      const snapshot = await ref.once("value");
+      return {
+        id: snapshot.key,
+        data: snapshot.val(),
+      };
+    } catch (e) {
+      logger.e(e, "Failed to get userlist reference");
+      throw e;
+    }
+  }
+
   static async create(userID) {
     try {
       const ref = userlistRef(userID);
@@ -15,7 +29,7 @@ export class UserWishListApi {
       return newRef.key;
     } catch (e) {
       logger.e(e, "Failed to create userlist reference");
-      return null;
+      throw e;
     }
   }
 
@@ -26,10 +40,9 @@ export class UserWishListApi {
         payload[w] = true;
       });
       await userlistRef(userlist.userID).set(payload);
-      return true;
     } catch (e) {
       logger.e(e, "Failed to update userlist reference");
-      return false;
+      throw e;
     }
   }
 

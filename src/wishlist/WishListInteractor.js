@@ -23,7 +23,7 @@ export class WishListInteractor {
     const userList = await UserWishListApi.create(userID);
     const validItems = items.filter((i) => i.count > 0);
 
-    logger.d("Create new wishlist: ", trimmed, validItems);
+    logger.d("Create new wishlist: ", userID, trimmed, validItems);
     const { id, data } = await WishListApi.create(
       userList,
       wishListName,

@@ -43,10 +43,9 @@ export class AuthApi {
         url: APP_URL,
       };
       await FireAuth.sendSignInLinkToEmail(email, config);
-      return true;
     } catch (e) {
       logger.e(e, "Failed to send sign in link");
-      return false;
+      throw e;
     }
   }
 }

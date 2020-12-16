@@ -1,11 +1,11 @@
-import { FireDatabase } from "../firebase";
+import {FireDatabase, FirePaths} from "../firebase";
 import { Logger } from "../common/util/logger";
 import { newRandomID } from "../common/util/id";
 
 const logger = Logger.tag("UserApi");
 
 function userRef(id) {
-  return FireDatabase.ref("/users").child(id);
+  return FireDatabase.ref(FirePaths.USERS).child(id);
 }
 
 async function get(id) {

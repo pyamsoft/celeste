@@ -1,10 +1,10 @@
 import { Logger } from "../common/util/logger";
-import { FireDatabase } from "../firebase";
+import { FireDatabase, FirePaths } from "../firebase";
 
 const logger = Logger.tag("UserWishListApi");
 
 function userlistRef(id) {
-  return FireDatabase.ref("/user-wishlists").child(id);
+  return FireDatabase.ref(FirePaths.USER_WISHLISTS).child(id);
 }
 
 export class UserWishListApi {
@@ -18,17 +18,6 @@ export class UserWishListApi {
       };
     } catch (e) {
       logger.e(e, "Failed to get userlist reference");
-      throw e;
-    }
-  }
-
-  static async create(userID) {
-    try {
-      const ref = userlistRef(userID);
-      const newRef = await ref.push(new Date().toUTCString());
-      return newRef.key;
-    } catch (e) {
-      logger.e(e, "Failed to create userlist reference");
       throw e;
     }
   }

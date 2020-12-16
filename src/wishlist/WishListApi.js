@@ -1,14 +1,17 @@
 import { Logger } from "../common/util/logger";
-import { FireDatabase } from "../firebase";
+import { FireDatabase, FirePaths } from "../firebase";
 
 const logger = Logger.tag("WishListApi");
 
 function wishListRef(id) {
-  return FireDatabase.ref("/wishlists").child(id);
+  return FireDatabase.ref(FirePaths.WISHLISTS).child(id);
 }
 
 function itemsRef(wishListID, item) {
-  return wishListRef(wishListID).child("items").child(item.type).child(item.id);
+  return wishListRef(wishListID)
+    .child(FirePaths.WISHLIST_ITEMS)
+    .child(item.type)
+    .child(item.id);
 }
 
 function groupItemsByType(items) {
@@ -38,16 +41,25 @@ function groupItemsByType(items) {
   return groups;
 }
 
+function createWishListID(userID) {
+  return FireDatabase.ref(FirePaths.USER_WISHLISTS).child(userID).push().key;
+}
+
 export class WishListApi {
-  static async create(wishListID, userID, name, items) {
+  static async create(userID, name, items) {
     try {
+      const now = new Date().toUTCString();
+      const wishListID = createWishListID(userID);
       const payload = {
         name,
         owner: userID,
         items: groupItemsByType(items),
-        createdAt: new Date().toUTCString(),
+        createdAt: now,
       };
-      await wishListRef(wishListID).set(payload);
+      const updates = {};
+      updates[`${FirePaths.USER_WISHLISTS}/${userID}/${wishListID}`] = now;
+      updates[`${FirePaths.WISHLISTS}/${wishListID}`] = payload;
+      await FireDatabase.ref().update(updates);
       return await WishListApi.get(wishListID);
     } catch (e) {
       logger.e(e, "Failed to create itemlist reference");

@@ -1,5 +1,4 @@
 import { Logger } from "../common/util/logger";
-import { UserWishListApi } from "../user-wishlist/UserWishListApi";
 import { WishListApi } from "./WishListApi";
 import { WishList } from "./WishList";
 
@@ -48,6 +47,7 @@ export class WishListInteractor {
       items: data.items,
     });
   }
+
   static async createNewWishList({ userID, wishListName, items }) {
     validate(userID, wishListName, items);
 
@@ -56,12 +56,10 @@ export class WishListInteractor {
       throw new Error("Must provide wish list name");
     }
 
-    const userListID = await UserWishListApi.create(userID);
     const validItems = items.filter((i) => i.count > 0);
 
     logger.d("Create new wishlist: ", userID, trimmed, validItems);
     const { id, data } = await WishListApi.create(
-      userListID,
       userID,
       wishListName,
       validItems
@@ -69,7 +67,7 @@ export class WishListInteractor {
 
     // No data, we failed to create
     if (!data) {
-      throw new Error("Failed to create new wishlist: " + userListID);
+      throw new Error("Failed to create new wishlist for user: " + userID);
     }
 
     return new WishList({

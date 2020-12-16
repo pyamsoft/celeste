@@ -29,3 +29,9 @@ try {
 
 export const FireAuth = firebase.auth();
 export const FireDatabase = firebase.database();
+export const FirePaths = {
+  USERS: "/users",
+  USER_WISHLISTS: "/user-wishlists",
+  WISHLISTS: "/wishlists",
+  WISHLIST_ITEMS: "/items",
+};

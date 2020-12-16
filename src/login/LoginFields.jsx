@@ -1,6 +1,6 @@
 import React from "react";
 import { CenteredContainer } from "../common/component/CenteredContainer";
-import { Button, SuccessButton } from "../common/component/Button";
+import { SuccessButton } from "../common/component/Button";
 import { Input } from "../common/component/Input";
 
 export function LoginFields(props) {

@@ -1,4 +1,3 @@
-import React from "react";
 import { ACNHFish } from "../acnh/ACNHFish";
 import { ACNHBug } from "../acnh/ACNHBug";
 import { ACNHSea } from "../acnh/ACNHSea";

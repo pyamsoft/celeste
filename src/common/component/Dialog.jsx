@@ -1,6 +1,5 @@
 import React from "react";
 import Modal from "react-modal";
-import _ from "lodash";
 import {
   fitToWindowHeight,
   fitToWindowWidth,

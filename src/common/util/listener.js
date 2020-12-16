@@ -7,6 +7,7 @@ export function stopListening(
     isCancel: true,
     isStop: true,
     isUnbind: true,
+    isUnsubscribe: true,
   }
 ) {
   if (!listener) {
@@ -17,6 +18,7 @@ export function stopListening(
   const isCancel = options ? options.isCancel : true;
   const isStop = options ? options.isStop : true;
   const isUnbind = options ? options.isUnbind : true;
+  const isUnsubscribe = options ? options.isUnsubscribe : true;
 
   if (typeof listener === TYPE_FUNCTION && isFunction) {
     listener();
@@ -35,6 +37,11 @@ export function stopListening(
 
   if (listener.unbind && isUnbind) {
     listener.unbind();
+    return true;
+  }
+
+  if (listener.unsubscribe && isUnsubscribe) {
+    listener.unsubscribe();
     return true;
   }
 

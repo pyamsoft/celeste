@@ -6,13 +6,15 @@ export class ACNHItem {
   #price;
   #image;
   #series;
+  #type;
 
-  constructor({ id, name, price, image, series }) {
+  constructor({ id, name, price, image, series, type }) {
     this.#id = id || "";
     this.#name = name || "";
     this.#price = price || 0;
     this.#image = image || "";
     this.#series = series || "";
+    this.#type = type || "";
   }
 
   get id() {
@@ -33,5 +35,9 @@ export class ACNHItem {
 
   get series() {
     return this.#series;
+  }
+
+  get type() {
+    return this.#type;
   }
 }

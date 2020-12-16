@@ -9,13 +9,17 @@ export class ItemList {
     this.#id = data?.id || "";
     this.#name = data?.name || "";
     this.#items = data?.items
-      ? Object.keys(data.items).map((key) => {
-          const values = data.items[key];
-          return new Item({
-            id: key,
-            ...values,
-          });
-        })
+      ? Object.keys(data.items)
+          .map((type) => {
+            const category = data.items[type];
+            return category.map((item) => {
+              return new Item({
+                ...item,
+                type,
+              });
+            });
+          })
+          .flatMap((i) => i)
       : [];
   }
 

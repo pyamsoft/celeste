@@ -1,12 +1,14 @@
 export class Item {
   #data;
   #id;
+  #type;
   #count;
   #giftedBy;
 
   constructor(data) {
     this.#data = data;
     this.#id = data?.id || "";
+    this.#type = data?.type || "";
     this.#count = data?.count || 0;
     this.#giftedBy = data?.giftedBy ? Object.keys(data.giftedBy) : [] || [];
   }
@@ -19,6 +21,10 @@ export class Item {
 
   get id() {
     return this.#id;
+  }
+
+  get type() {
+    return this.#type;
   }
 
   get count() {

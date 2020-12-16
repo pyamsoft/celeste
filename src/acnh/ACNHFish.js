@@ -9,6 +9,7 @@ export class ACNHFish extends ACNHItem {
       name: data?.name["name-USen"] || "",
       price: data?.price || 0,
       image: data?.image_uri || "",
+      type: ACNHFish.TYPE,
       series,
     });
   }

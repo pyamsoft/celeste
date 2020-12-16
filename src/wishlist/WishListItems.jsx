@@ -55,6 +55,16 @@ export class WishListItems extends React.Component {
     }
   };
 
+  mapToWishing = (item) => {
+    const { items } = this.props;
+    const isWishing = items.find((i) => i.id === item.id);
+    return {
+      item,
+      count: isWishing?.count ?? 0,
+      isWishing: isWishing?.count > 0,
+    };
+  };
+
   render() {
     const {
       className,
@@ -82,13 +92,16 @@ export class WishListItems extends React.Component {
               >
                 {categoryItems[series]
                   .filter(this.filterVisibleItems)
-                  .map((item) => (
+                  .map(this.mapToWishing)
+                  .map(({ item, count, isWishing }) => (
                     <WishListItem
                       key={`${category}-${series}-${item.variant}-${item.id}`}
                       item={item}
+                      isWishing={isWishing}
                       onAdd={onItemAdded}
                       onRemove={onItemRemoved}
                       size={itemSize}
+                      count={count}
                     />
                   ))}
               </div>
@@ -98,13 +111,16 @@ export class WishListItems extends React.Component {
           <div className="flex flex-row flex-wrap overflow-x-hidden overflow-y-auto h-full">
             {Object.values(categoryItems)
               .filter(this.filterVisibleItems)
-              .map((item) => (
+              .map(this.mapToWishing)
+              .map(({ item, count, isWishing }) => (
                 <WishListItem
                   key={`${category}-${item.id}`}
                   item={item}
                   onAdd={onItemAdded}
                   onRemove={onItemRemoved}
+                  isWishing={isWishing}
                   size={itemSize}
+                  count={count}
                 />
               ))}
           </div>
@@ -138,10 +154,16 @@ class WishListItem extends React.Component {
   };
 
   render() {
-    const { item, size } = this.props;
+    const { isWishing, item, size, count } = this.props;
     return (
       <div className="p-1 cursor-point" style={this.generateItemStyle(size)}>
-        <div className="relative w-full h-full bg-gray-300 hover:bg-gray-100 rounded-lg border-2 border-gray-400 hover:border-gray-500">
+        <div
+          className={`relative w-full h-full rounded-lg border-2 ${
+            isWishing
+              ? "bg-green-300 hover:bg-green-400 border-green-400 hover:border-green-500"
+              : "bg-gray-300 hover:bg-gray-100 border-gray-400 hover:border-gray-500"
+          }`}
+        >
           <Img
             preload={true}
             src={item.image}
@@ -161,6 +183,12 @@ class WishListItem extends React.Component {
             >
               -
             </IconButton>
+            <div className="flex-auto" />
+            {count > 0 && (
+              <IconButton className="mx-2 text-white font-bold">
+                {count}
+              </IconButton>
+            )}
             <div className="flex-auto" />
             <IconButton
               className="mr-2 text-green-500"

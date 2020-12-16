@@ -4,6 +4,7 @@ import { WishList } from "./WishList";
 import { WishListInteractor } from "./WishListInteractor";
 import { Logger } from "../common/util/logger";
 import { WishListSaveRow } from "./WishListSaveRow";
+import { WishListManageInteractor } from "./WishListManageInteractor";
 
 const logger = Logger.tag("WishListEditorDialog");
 
@@ -73,26 +74,22 @@ export class WishListEditorDialog extends React.Component {
   };
 
   handleItemAdded = async (item) => {
-    logger.d("Item added to wishlist: ", item);
     const { items } = this.state;
-    const newItems = await WishListInteractor.itemAdded({
+    const newItems = await WishListManageInteractor.itemAdded({
       list: items,
       item,
     });
 
-    logger.d("Item list updated: ", newItems);
     this.setState({ items: newItems });
   };
 
   handleItemRemoved = async (item) => {
-    logger.d("Item removed from wishlist: ", item);
     const { items } = this.state;
-    const newItems = await WishListInteractor.itemRemoved({
+    const newItems = await WishListManageInteractor.itemRemoved({
       list: items,
       item,
     });
 
-    logger.d("Item list updated: ", newItems);
     this.setState({ items: newItems });
   };
 

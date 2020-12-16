@@ -22,19 +22,37 @@ async function mutateGiftedBy(userID, wishListID, itemID, adjust) {
   });
 }
 
+function groupItemsByType(items) {
+  const groups = {};
+  for (const item of items) {
+    const type = item.type;
+    if (!type) {
+      continue;
+    }
+
+    const networkItem = {
+      id: item.id,
+      count: item.count,
+      giftedBy: item.giftedBy,
+    };
+
+    if (!groups[type]) {
+      groups[type] = [networkItem];
+    } else {
+      groups[type].push(networkItem);
+    }
+  }
+
+  return groups;
+}
+
 export class ItemListApi {
   static async create(wishListID, name, items) {
     try {
       const payload = {
         name,
-        items: {},
+        items: groupItemsByType(items),
       };
-      items.forEach((i) => {
-        payload.items[i.id] = {
-          count: i.count,
-          giftedBy: i.giftedBy,
-        };
-      });
       await itemlistRef(wishListID).set(payload);
       return await ItemListApi.get(wishListID);
     } catch (e) {

@@ -1,6 +1,5 @@
 import React from "react";
 import { Logger } from "../common/util/logger";
-import { ProfileLoading } from "./ProfileLoading";
 import { UserProfile } from "./UserProfile";
 import { stopListening } from "../common/util/listener";
 import { WishListEditorDialog } from "../wishlist/WishListEditorDialog";
@@ -59,6 +58,12 @@ export class Profile extends React.Component {
       return;
     }
 
+    if (userList.wishlists.length <= 0) {
+      logger.d("User does not have any user-wishlists: ", userList);
+      this.setState({ wishLists: [] });
+      return;
+    }
+
     userList.wishlists.forEach((wID) => {
       if (!this.itemListListeners[wID]) {
         this.itemListListeners[wID] = ProfileInteractor.watchItemList({
@@ -97,16 +102,12 @@ export class Profile extends React.Component {
     const { wishLists, selected } = this.state;
     return (
       <div className="w-full h-full overflow-hidden">
-        {!wishLists || wishLists.length <= 0 ? (
-          <ProfileLoading user={user} />
-        ) : (
-          <UserProfile
-            user={user}
-            wishLists={wishLists}
-            onWishListSelected={this.handleWishListSelected}
-            onCreateNewWishList={this.handleCreateNewWishList}
-          />
-        )}
+        <UserProfile
+          user={user}
+          wishLists={wishLists || []}
+          onWishListSelected={this.handleWishListSelected}
+          onCreateNewWishList={this.handleCreateNewWishList}
+        />
 
         {!!selected && (
           <WishListEditorDialog

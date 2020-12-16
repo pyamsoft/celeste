@@ -7,10 +7,7 @@ export class UserWishListRealtime {
       if (userID !== id) {
         return;
       }
-      const list = new UserWishList({
-        id: userID,
-        wishlists: userlist,
-      });
+      const list = new UserWishList({ id: userID, wishlists: userlist });
       onChange(list);
     });
   }

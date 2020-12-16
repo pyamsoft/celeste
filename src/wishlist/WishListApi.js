@@ -8,10 +8,7 @@ function wishListRef(id) {
 }
 
 function itemsRef(wishListID, item) {
-  return wishListRef(wishListID)
-    .child(FirePaths.WISHLIST_ITEMS)
-    .child(item.type)
-    .child(item.id);
+  return wishListRef(wishListID).child(item.type).child(item.id);
 }
 
 function groupItemsByType(items) {
@@ -30,6 +27,7 @@ function groupItemsByType(items) {
       const payload = {
         count: item.count,
         giftedBy: item.giftedBy,
+        createdAt: item.createdAt ? item.createdAt.toUTCString() : null,
       };
 
       if (item.series) {
@@ -68,8 +66,8 @@ export class WishListApi {
       const payload = {
         name,
         owner: userID,
-        items: groupItemsByType(items),
         createdAt: now,
+        ...groupItemsByType(items),
       };
       const updates = {};
       updates[`${FirePaths.USER_WISHLISTS}/${userID}/${wishListID}`] = now;
@@ -87,7 +85,7 @@ export class WishListApi {
       await wishListRef(wishListID).transaction((payload) => {
         if (payload) {
           payload.name = name;
-          payload.items = groupItemsByType(items);
+          payload = { ...payload, ...groupItemsByType(items) };
         }
         return payload;
       });

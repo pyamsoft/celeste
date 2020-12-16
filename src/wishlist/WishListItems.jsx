@@ -46,35 +46,18 @@ export class WishListItems extends React.Component {
     if (isEditable) {
       return true;
     } else {
-      return items.find((i) => {
-        const basicValidation = i.id === item.id && category === i.type;
-        if (!basicValidation) {
-          return false;
-        }
-
-        if (WishListCategories.hasSeries(category)) {
-          return i.series === item.series;
-        } else {
-          return true;
-        }
-      });
+      return items.find(
+        (i) =>
+          i.id === item.id && category === i.type && i.series === item.series
+      );
     }
   };
 
   mapToWishing = (item) => {
     const { items, category } = this.props;
-    const isWishing = items.find((i) => {
-      const basicValidation = i.id === item.id && category === i.type;
-      if (!basicValidation) {
-        return false;
-      }
-
-      if (WishListCategories.hasSeries(category)) {
-        return i.series === item.series;
-      } else {
-        return true;
-      }
-    });
+    const isWishing = items.find(
+      (i) => i.id === item.id && category === i.type && i.series === item.series
+    );
 
     return {
       item,

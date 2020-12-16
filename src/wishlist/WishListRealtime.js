@@ -9,12 +9,7 @@ export class WishListRealtime {
       }
 
       if (wishList) {
-        const list = new WishList({
-          id: itemID,
-          name: wishList.name,
-          createdAt: wishList.createdAt,
-          items: wishList.items,
-        });
+        const list = new WishList({ ...wishList, id: itemID });
         onInsertOrUpdate(list);
       } else {
         onDelete(itemID);

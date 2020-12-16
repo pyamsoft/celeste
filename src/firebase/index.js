@@ -33,5 +33,4 @@ export const FirePaths = {
   USERS: "/users",
   USER_WISHLISTS: "/user-wishlists",
   WISHLISTS: "/wishlists",
-  WISHLIST_ITEMS: "/items",
 };

@@ -14,7 +14,7 @@ export class User {
     this.#id = data?.id || "";
     this.#email = data?.email || "";
     this.#createdAt = data?.creationTime ? new Date(data.creationTime) : null;
-    this.#lastLogin = data?.lastLoginAt ? new Date(data.lastLoginAt) : null;
+    this.#lastLogin = data?.lastLogin ? new Date(data.lastLogin) : null;
     this.#displayName = data?.displayName || "";
   }
 

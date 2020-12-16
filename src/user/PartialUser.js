@@ -1,19 +1,17 @@
-import { asID } from "../common/util/id";
-
 export class PartialUser {
-  #id;
+  #real;
   #displayName;
 
   constructor(data) {
-    this.#id = data?.id || "";
+    this.#real = !!data;
     this.#displayName = data?.displayName || "";
-  }
-
-  get id() {
-    return asID(this.#id);
   }
 
   get displayName() {
     return this.#displayName;
+  }
+
+  get exists() {
+    return this.#real;
   }
 }

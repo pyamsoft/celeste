@@ -41,11 +41,7 @@ export class WishListInteractor {
       throw new Error("Failed to update existing wishlist: " + wishListID);
     }
 
-    return new WishList({
-      id,
-      name: data.name,
-      items: data.items,
-    });
+    return new WishList({ ...data, id });
   }
 
   static async createNewWishList({ userID, wishListName, items }) {
@@ -70,11 +66,7 @@ export class WishListInteractor {
       throw new Error("Failed to create new wishlist for user: " + userID);
     }
 
-    return new WishList({
-      id,
-      name: data.name,
-      items: data.items,
-    });
+    return new WishList({ ...data, id });
   }
 
   static async get({ itemID }) {
@@ -85,10 +77,6 @@ export class WishListInteractor {
       throw new Error("Failed to get wishlist: " + itemID);
     }
 
-    return new WishList({
-      id,
-      name: data.name,
-      items: data.items,
-    });
+    return new WishList({ ...data, id });
   }
 }

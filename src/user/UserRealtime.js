@@ -12,12 +12,7 @@ export class UserRealtime {
       }
 
       logger.d("User changed: ", id, user);
-      onChange(
-        new PartialUser({
-          id,
-          ...user,
-        })
-      );
+      onChange(new PartialUser(user));
     });
   }
 }

@@ -1,6 +1,5 @@
-import {FireDatabase, FirePaths} from "../firebase";
+import { FireDatabase, FirePaths } from "../firebase";
 import { Logger } from "../common/util/logger";
-import { newRandomID } from "../common/util/id";
 
 const logger = Logger.tag("UserApi");
 
@@ -22,9 +21,9 @@ async function get(id) {
 }
 
 export class UserApi {
-  static async create(id) {
+  static async create(id, displayName) {
     try {
-      await userRef(id).set({ displayName: newRandomID() });
+      await userRef(id).set({ displayName });
       return await get(id);
     } catch (e) {
       logger.e(e, "Failed to create user");

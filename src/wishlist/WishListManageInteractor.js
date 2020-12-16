@@ -1,16 +1,12 @@
 import { WishListItem } from "./WishListItem";
-import { WishListCategories } from "./WishListCategories";
 
 export class WishListManageInteractor {
   static async itemAdded({ list, item }) {
     // Operate on a copy of the list
     const newList = list.map((i) => i);
-    const hasSeries = WishListCategories.hasSeries(item.type);
     const updateIndex = newList.findIndex(
       (i) =>
-        i.id === item.id &&
-        i.type === item.type &&
-        (hasSeries ? i.series === item.series : true)
+        i.id === item.id && i.type === item.type && i.series === item.series
     );
     if (updateIndex >= 0) {
       const currentItem = newList[updateIndex];
@@ -20,10 +16,12 @@ export class WishListManageInteractor {
       );
     } else {
       const newItem = new WishListItem({
+        // Cannot spread ...item here because fields are private
         id: item.id,
         type: item.type,
-        series: hasSeries ? item.series : null,
+        series: item.series,
         count: 1,
+        createdAt: new Date().toUTCString(),
         giftedBy: {},
       });
       newList.push(newItem);
@@ -33,12 +31,9 @@ export class WishListManageInteractor {
 
   static async itemRemoved({ list, item }) {
     // Do lookup operations without list copy
-    const hasSeries = WishListCategories.hasSeries(item.type);
     const updateIndex = list.findIndex(
       (i) =>
-        i.id === item.id &&
-        i.type === item.type &&
-        (hasSeries ? i.series === item.series : true)
+        i.id === item.id && i.type === item.type && i.series === item.series
     );
     if (updateIndex < 0) {
       return list;

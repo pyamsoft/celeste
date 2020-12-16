@@ -1,6 +1,35 @@
 import { WishListItem } from "./WishListItem";
 import { asID } from "../common/util/id";
-import { WishListCategories } from "./WishListCategories";
+import { ACNHFish } from "../acnh/ACNHFish";
+import { ACNHBug } from "../acnh/ACNHBug";
+import { ACNHFossil } from "../acnh/ACNHFossil";
+import { ACNHSea } from "../acnh/ACNHSea";
+import { ACNHHouseware } from "../acnh/ACNHHouseware";
+import { ACNHWallmount } from "../acnh/ACNHWallmount";
+
+function parseItems(items, type) {
+  if (!items) {
+    return [];
+  }
+
+  const category = items[type];
+  return category
+    ? Object.keys(category)
+        .map((seriesName) => {
+          const series = category[seriesName];
+          return Object.keys(series).map((itemID) => {
+            const itemData = series[itemID];
+            return new WishListItem({
+              ...itemData,
+              id: itemID,
+              series: seriesName,
+              type,
+            });
+          });
+        })
+        .flatMap((i) => i)
+    : [];
+}
 
 export class WishList {
   #id;
@@ -13,38 +42,14 @@ export class WishList {
     this.#name = data?.name || "";
     this.#createdAt = data?.createdAt ? new Date(data.createdAt) : null;
 
-    this.#items = data?.items
-      ? Object.keys(data.items)
-          .map((type) => {
-            const category = data.items[type];
-            if (WishListCategories.hasSeries(type)) {
-              return Object.keys(category)
-                .map((seriesName) => {
-                  const series = category[seriesName];
-                  return Object.keys(series).map((itemID) => {
-                    const itemData = series[itemID];
-                    return new WishListItem({
-                      ...itemData,
-                      id: itemID,
-                      series: seriesName,
-                      type,
-                    });
-                  });
-                })
-                .flatMap((i) => i);
-            } else {
-              return Object.keys(category).map((itemID) => {
-                const itemData = category[itemID];
-                return new WishListItem({
-                  ...itemData,
-                  id: itemID,
-                  type,
-                });
-              });
-            }
-          })
-          .flatMap((i) => i)
-      : [];
+    this.#items = [
+      ...parseItems(data, ACNHFish.TYPE),
+      ...parseItems(data, ACNHBug.TYPE),
+      ...parseItems(data, ACNHFossil.TYPE),
+      ...parseItems(data, ACNHSea.TYPE),
+      ...parseItems(data, ACNHHouseware.TYPE),
+      ...parseItems(data, ACNHWallmount.TYPE),
+    ];
   }
 
   get id() {

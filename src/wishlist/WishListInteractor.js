@@ -1,7 +1,7 @@
 import { Logger } from "../common/util/logger";
+import { UserWishListApi } from "../user-wishlist/UserWishListApi";
 import { WishListApi } from "./WishListApi";
-import { ItemListApi } from "../item/ItemListApi";
-import { ItemList } from "../item/ItemList";
+import { WishList } from "./WishList";
 
 const logger = Logger.tag("WishListInteractor");
 
@@ -20,11 +20,11 @@ export class WishListInteractor {
       throw new Error("Must provide wish list name");
     }
 
-    const userList = await WishListApi.create(userID);
+    const userList = await UserWishListApi.create(userID);
     const validItems = items.filter((i) => i.count > 0);
 
     logger.d("Create new wishlist: ", trimmed, validItems);
-    const { id, data } = await ItemListApi.create(
+    const { id, data } = await WishListApi.create(
       userList,
       wishListName,
       validItems
@@ -35,7 +35,7 @@ export class WishListInteractor {
       throw new Error("Failed to create new wishlist: " + id);
     }
 
-    return new ItemList({
+    return new WishList({
       id,
       name: data.name,
       items: data.items,
@@ -43,14 +43,14 @@ export class WishListInteractor {
   }
 
   static async get({ itemID }) {
-    const { id, data } = await ItemListApi.get(itemID);
+    const { id, data } = await WishListApi.get(itemID);
 
     // No data, does not exist
     if (!data) {
       throw new Error("Failed to get wishlist: " + itemID);
     }
 
-    return new ItemList({
+    return new WishList({
       id,
       name: data.name,
       items: data.items,

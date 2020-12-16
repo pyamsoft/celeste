@@ -2,7 +2,7 @@ import React from "react";
 import { WishListView } from "./WishListView";
 import { WishListCategories } from "./WishListCategories";
 
-export class WishList extends React.Component {
+export class WishListDelegate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

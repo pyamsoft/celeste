@@ -1,12 +1,12 @@
-import { UserListRealtime } from "../user/UserListRealtime";
-import { ItemListRealtime } from "../item/ItemListRealtime";
+import { UserWishListRealtime } from "../user-wishlist/UserWishListRealtime";
+import { WishListRealtime } from "../wishlist/WishListRealtime";
 
 export class ProfileInteractor {
   static watchUserList({ userID, onUserListChange }) {
-    return UserListRealtime.watch(userID, onUserListChange);
+    return UserWishListRealtime.watch(userID, onUserListChange);
   }
 
   static watchItemList({ itemID, onItemListChange }) {
-    return ItemListRealtime.watch(itemID, onItemListChange);
+    return WishListRealtime.watch(itemID, onItemListChange);
   }
 }

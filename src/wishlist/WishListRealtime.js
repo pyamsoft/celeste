@@ -1,14 +1,14 @@
-import { ItemListApi } from "./ItemListApi";
-import { ItemList } from "./ItemList";
+import { WishListApi } from "./WishListApi";
+import { WishList } from "./WishList";
 
-export class ItemListRealtime {
+export class WishListRealtime {
   static watch(id, onChange) {
-    return ItemListApi.watch(id, (itemID, wishList) => {
+    return WishListApi.watch(id, (itemID, wishList) => {
       if (id !== itemID) {
         return;
       }
 
-      const list = new ItemList({
+      const list = new WishList({
         id: itemID,
         name: wishList.name,
         items: wishList.items,

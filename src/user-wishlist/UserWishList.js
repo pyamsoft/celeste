@@ -1,4 +1,4 @@
-export class UserList {
+export class UserWishList {
   #id;
   #wishlists;
 

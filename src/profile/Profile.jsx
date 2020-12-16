@@ -64,7 +64,7 @@ export class Profile extends React.Component {
         this.itemListListeners[wID] = ProfileInteractor.watchItemList({
           itemID: wID,
           onItemListChange: (list) => {
-            logger.d("Item list updated: ", list);
+            logger.d("WishListItem list updated: ", list);
             const { wishLists } = this.state;
             const newList = wishLists || [];
             const index = newList.findIndex((w) => w.id === list.id);

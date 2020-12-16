@@ -1,4 +1,4 @@
-import { Item } from "../item/Item";
+import { WishListItem } from "./WishListItem";
 
 export class WishListManageInteractor {
   static async itemAdded({ list, item }) {
@@ -12,7 +12,7 @@ export class WishListManageInteractor {
         Math.min(99, currentCount + 1)
       );
     } else {
-      const newItem = new Item({
+      const newItem = new WishListItem({
         id: item.id,
         type: item.type,
         count: 1,

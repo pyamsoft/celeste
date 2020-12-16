@@ -1,6 +1,6 @@
 import React from "react";
 import { Dialog } from "../common/component/Dialog";
-import { WishList } from "./WishList";
+import { WishListDelegate } from "./WishListDelegate";
 import { WishListInteractor } from "./WishListInteractor";
 import { Logger } from "../common/util/logger";
 import { WishListSaveRow } from "./WishListSaveRow";
@@ -98,7 +98,7 @@ export class WishListEditorDialog extends React.Component {
     const { name, items } = this.state;
     return (
       <Dialog onClose={this.handleClose} className="w-full h-full">
-        <WishList
+        <WishListDelegate
           user={user}
           acnh={acnh}
           name={name}
@@ -112,7 +112,7 @@ export class WishListEditorDialog extends React.Component {
             onCancel={this.handleClose}
             onSave={this.handleSave}
           />
-        </WishList>
+        </WishListDelegate>
       </Dialog>
     );
   }

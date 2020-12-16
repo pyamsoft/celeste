@@ -1,5 +1,5 @@
 import React from "react";
-import { WishList } from "./WishList";
+import { WishListDelegate } from "./WishListDelegate";
 import { Title } from "../common/component/Title";
 import { Logger } from "../common/util/logger";
 import { registerRoute } from "../router/Router";
@@ -44,12 +44,12 @@ class WishListController extends React.Component {
 
   handleItemAdded = (item) => {
     const { wishlist } = this.props;
-    logger.d("Item gifted to wishlist: ", item, wishlist);
+    logger.d("WishListItem gifted to wishlist: ", item, wishlist);
   };
 
   handleItemRemoved = (item) => {
     const { wishlist } = this.props;
-    logger.d("Item taken back from wishlist: ", item, wishlist);
+    logger.d("WishListItem taken back from wishlist: ", item, wishlist);
   };
 
   render() {
@@ -58,7 +58,7 @@ class WishListController extends React.Component {
     return !wishlist || loading ? (
       <Loading />
     ) : (
-      <WishList
+      <WishListDelegate
         user={user}
         acnh={acnh}
         isEditable={false}

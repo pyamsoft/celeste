@@ -1,6 +1,6 @@
-import { Item } from "./Item";
+import { WishListItem } from "./WishListItem";
 
-export class ItemList {
+export class WishList {
   #id;
   #name;
   #items;
@@ -13,7 +13,7 @@ export class ItemList {
           .map((type) => {
             const category = data.items[type];
             return category.map((item) => {
-              return new Item({
+              return new WishListItem({
                 ...item,
                 type,
               });

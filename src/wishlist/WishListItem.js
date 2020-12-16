@@ -1,4 +1,4 @@
-export class Item {
+export class WishListItem {
   #data;
   #id;
   #type;
@@ -14,7 +14,7 @@ export class Item {
   }
 
   updateCount(newCount) {
-    const newItem = new Item(this.#data);
+    const newItem = new WishListItem(this.#data);
     newItem.#count = newCount;
     return newItem;
   }

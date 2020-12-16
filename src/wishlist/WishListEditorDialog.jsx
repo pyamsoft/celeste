@@ -91,7 +91,6 @@ export class WishListEditorDialog extends React.Component {
       item,
     });
 
-    logger.d("Item added: ", newItems);
     this.setState({ items: newItems });
   };
 
@@ -102,7 +101,6 @@ export class WishListEditorDialog extends React.Component {
       item,
     });
 
-    logger.d("Item removed: ", newItems);
     this.setState({ items: newItems });
   };
 
@@ -114,7 +112,6 @@ export class WishListEditorDialog extends React.Component {
       note,
     });
 
-    logger.d("Item note updated: ", newItems);
     this.setState({ items: newItems });
   };
 

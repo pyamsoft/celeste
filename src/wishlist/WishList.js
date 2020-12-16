@@ -32,12 +32,14 @@ function parseItems(items, type) {
 }
 
 export class WishList {
+  #data;
   #id;
   #name;
   #createdAt;
   #items;
 
   constructor(data) {
+    this.#data = data;
     this.#id = data?.id || "";
     this.#name = data?.name || "";
     this.#createdAt = data?.createdAt ? new Date(data.createdAt) : null;
@@ -66,5 +68,11 @@ export class WishList {
 
   get items() {
     return [...this.#items];
+  }
+
+  updateItems(newItems) {
+    const newWishList = new WishList(this.#data);
+    newWishList.#items = newItems;
+    return newWishList;
   }
 }

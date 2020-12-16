@@ -61,9 +61,22 @@ export class WishListItem {
     return newItem;
   }
 
-  updateGiftedBy(user, newCount) {
+  updateGiftedBy(userID, newCount) {
     const newItem = new WishListItem(this.#data);
-    newItem.#giftedBy[user.id] = newCount;
+    newItem.#giftedBy[userID] = newCount;
+    return newItem;
+  }
+
+  clearGiftedBy(userID) {
+    const newItem = new WishListItem(this.#data);
+    const newGiftedBy = {};
+    for (const key of Object.keys(newItem.#giftedBy)) {
+      if (key === userID) {
+        continue;
+      }
+      newGiftedBy[key] = newItem.#giftedBy[key];
+    }
+    newItem.#giftedBy = newGiftedBy;
     return newItem;
   }
 }

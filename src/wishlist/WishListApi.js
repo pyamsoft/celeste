@@ -122,6 +122,8 @@ export class WishListApi {
           // we do not touch the giftedBy array since that is not guaranteed to be in sync
           editItems(payload, items, (target, data) => {
             const { count, note, createdAt } = data;
+
+            // If zero count, delete the item
             if (count <= 0) {
               return null;
             }

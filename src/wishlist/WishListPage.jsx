@@ -6,6 +6,7 @@ import { registerRoute } from "../router/Router";
 import { WishListInteractor } from "./WishListInteractor";
 import { ProfileInteractor } from "../profile/ProfileInteractor";
 import { stopListening } from "../common/util/listener";
+import { WishListGiftInteractor } from "./WishListGiftInteractor";
 
 const logger = Logger.tag("WishListPage");
 
@@ -85,14 +86,42 @@ class WishListController extends React.Component {
     });
   };
 
-  handleItemAdded = (item) => {
+  handleItemAdded = async (item) => {
+    const { user } = this.props;
+    if (!user) {
+      logger.w("Missing user, you must sign in to do gift things.");
+      return;
+    }
+
     const { wishlist } = this.state;
-    logger.d("WishListItem gifted to wishlist: ", item, wishlist);
+    this.setState({
+      wishlist: wishlist.updateItems(
+        await WishListGiftInteractor.giftAdded({
+          userID: user.id,
+          list: wishlist.items,
+          item,
+        })
+      ),
+    });
   };
 
-  handleItemRemoved = (item) => {
+  handleItemRemoved = async (item) => {
+    const { user } = this.props;
+    if (!user) {
+      logger.w("Missing user, you must sign in to do gift things.");
+      return;
+    }
+
     const { wishlist } = this.state;
-    logger.d("WishListItem taken back from wishlist: ", item, wishlist);
+    this.setState({
+      wishlist: wishlist.updateItems(
+        await WishListGiftInteractor.giftRemoved({
+          userID: user.id,
+          list: wishlist.items,
+          item,
+        })
+      ),
+    });
   };
 
   render() {

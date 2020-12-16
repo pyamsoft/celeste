@@ -1,6 +1,7 @@
 import { WishListItem } from "./WishListItem";
 
 export class WishListManageInteractor {
+
   static async itemAdded({ list, item }) {
     // Operate on a copy of the list
     const newList = list.map((i) => i);

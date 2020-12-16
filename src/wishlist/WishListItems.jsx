@@ -54,7 +54,7 @@ export class WishListItems extends React.Component {
   };
 
   mapToWishing = (item) => {
-    const { items, category } = this.props;
+    const { isEditable, items, category } = this.props;
     const isWishing = items.find(
       (i) => i.id === item.id && category === i.type && i.series === item.series
     );
@@ -62,7 +62,7 @@ export class WishListItems extends React.Component {
     return {
       item,
       count: isWishing?.count ?? 0,
-      isWishing: isWishing?.count > 0,
+      isWishing: isEditable ? isWishing?.count > 0 : false,
     };
   };
 

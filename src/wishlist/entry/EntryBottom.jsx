@@ -3,23 +3,24 @@ import { EmptyButton } from "../../common/component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import { remToPx } from "../../common/util/window";
+import { PopOver } from "../../common/component/PopOver";
 
 export function EntryBottom(props) {
   const {
+    item,
     count,
     note,
     onAdd,
     onRemove,
     onNoteChanged,
-    onNoteClicked,
     isEditable,
   } = props;
   return (
     <div className="block absolute z-10 bottom-0 left-0 right-0 pb-3">
       <NoteButton
+        item={item}
         note={note}
         onNoteChanged={onNoteChanged}
-        onNoteClicked={onNoteClicked}
         isEditable={isEditable}
       />
       <CountButtons count={count} onAdd={onAdd} onRemove={onRemove} />
@@ -28,25 +29,53 @@ export function EntryBottom(props) {
 }
 
 function NoteButton(props) {
-  const { note, onNoteClicked } = props;
+  const { item, note } = props;
 
   return (
-    <div className="flex flex-row flex-nowrap w-full mb-2">
+    <div className="flex flex-row flex-nowrap w-full mb-2 relative">
       <div className="flex-auto" />
-      <EmptyButton onClick={onNoteClicked} className="mr-2">
-        <div className="relative w-8 h-8">
-          <FontAwesomeIcon
-            icon={faCommentDots}
-            size="2x"
-            className="inset-0 absolute z-0"
-          />
-          {note && (
-            <small className="bottom-0 right-0 z-10 absolute rounded-full h-4 w-4 bg-yellow-500 text-white text-center">
-              !
-            </small>
-          )}
+      <PopOver
+        closeOnClickOutside={false}
+        trigger={({ togglePopOver }) => (
+          <div className="need-this-div-or-ref-error">
+            <EmptyButton onClick={togglePopOver} className="mr-2">
+              <div className="relative w-8 h-8">
+                <FontAwesomeIcon
+                  icon={faCommentDots}
+                  size="2x"
+                  className="inset-0 absolute z-0"
+                />
+                {note && (
+                  <small className="bottom-0 right-0 z-10 absolute rounded-full h-4 w-4 bg-yellow-500 text-white text-center">
+                    !
+                  </small>
+                )}
+              </div>
+            </EmptyButton>
+          </div>
+        )}
+      >
+        {(popOverOperations) => (
+          <NotePopup {...popOverOperations} item={item} />
+        )}
+      </PopOver>
+    </div>
+  );
+}
+
+function NotePopup(props) {
+  const { item, closePopOver } = props;
+  return (
+    <div className="block w-full h-full">
+      <div className="flex flex-row flex-nowrap">
+        <div className="flex-auto" />
+        <div className="cursor-pointer" onClick={closePopOver}>
+          X
         </div>
-      </EmptyButton>
+      </div>
+      <div>
+        Hello: {item.name} {item.price}
+      </div>
     </div>
   );
 }

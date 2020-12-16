@@ -1,12 +1,8 @@
 import React from "react";
-import {Img} from "../../common/component/Img";
-import {remToPx} from "../../common/util/window";
-import {EmptyButton} from "../../common/component/Button";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCommentDots} from "@fortawesome/free-solid-svg-icons";
-import {Logger} from "../../common/util/logger";
-import {EntryTop} from "./EntryTop";
-import {EntryBottom} from "./EntryBottom";
+import { Img } from "../../common/component/Img";
+import { Logger } from "../../common/util/logger";
+import { EntryTop } from "./EntryTop";
+import { EntryBottom } from "./EntryBottom";
 
 const logger = Logger.tag("WishListEntry");
 
@@ -64,6 +60,7 @@ export class WishListEntry extends React.Component {
 
           <EntryTop item={item} isEditable={isEditable} />
           <EntryBottom
+            item={item}
             count={count}
             note={note}
             isEditable={isEditable}
@@ -77,4 +74,3 @@ export class WishListEntry extends React.Component {
     );
   }
 }
-

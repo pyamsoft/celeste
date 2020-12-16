@@ -4,6 +4,7 @@ import "react-app-polyfill/stable";
 import "intersection-observer";
 // CSS
 import "./index.css";
+import "reactjs-popup/dist/index.css";
 // Web analytics
 import { reportWebVitals } from "./reportWebVitals";
 // API preparation

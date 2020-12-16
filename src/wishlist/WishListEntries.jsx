@@ -82,7 +82,7 @@ export class WishListEntries extends React.Component {
       <div
         className={`${
           className ? className : ""
-        } block w-full overflow-hidden h-full`}
+        } block w-full overflow-hidden h-full popover-boundary`}
         style={style}
       >
         {WishListCategories.hasSeries(category) ? (

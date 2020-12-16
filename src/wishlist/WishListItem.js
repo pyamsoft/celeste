@@ -3,6 +3,7 @@ import { asID } from "../common/util/id";
 export class WishListItem {
   #data;
   #id;
+  #variant;
   #createdAt;
   #type;
   #count;
@@ -13,6 +14,7 @@ export class WishListItem {
     this.#id = data?.id || "";
     this.#createdAt = data?.createdAt ? new Date(data.createdAt) : null;
     this.#type = data?.type || "";
+    this.#variant = data?.variant || "";
     this.#count = data?.count || 0;
     this.#giftedBy = data?.giftedBy || {};
   }
@@ -35,6 +37,10 @@ export class WishListItem {
 
   get giftedBy() {
     return { ...this.#giftedBy };
+  }
+
+  get variant() {
+    return this.#variant;
   }
 
   updateCount(newCount) {

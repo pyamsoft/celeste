@@ -29,10 +29,15 @@ function groupItemsByType(items) {
     }
 
     if (item.count > 0) {
-      groups[type][key] = {
+      const payload = {
         count: item.count,
         giftedBy: item.giftedBy,
       };
+      if (item.variant) {
+        groups[type][key][item.variant] = payload;
+      } else {
+        groups[type][key] = payload;
+      }
     } else {
       groups[type][key] = null;
     }

@@ -6,7 +6,6 @@ import { ACNHWallmount } from "../acnh/ACNHWallmount";
 import { fitToWindowWidth, remToPx, watchResize } from "../common/util/window";
 import { EmptyButton } from "../common/component/Button";
 import { stopListening } from "../common/util/listener";
-import { Logger } from "../common/util/logger";
 
 function isMultiSeriesCategory(category) {
   return category === ACNHHouseware.TYPE || category === ACNHWallmount.TYPE;
@@ -48,17 +47,39 @@ export class WishListItems extends React.Component {
   }
 
   filterVisibleItems = (item) => {
-    const { items, isEditable } = this.props;
+    const { items, isEditable, category } = this.props;
     if (isEditable) {
       return true;
     } else {
-      return items.find((i) => i.id === item.id);
+      return items.find((i) => {
+        const basicValidation = i.id === item.id && category === i.type;
+        if (!basicValidation) {
+          return false;
+        }
+
+        if (isMultiSeriesCategory(category)) {
+          return i.variant === item.variant;
+        } else {
+          return true;
+        }
+      });
     }
   };
 
   mapToWishing = (item) => {
-    const { items } = this.props;
-    const isWishing = items.find((i) => i.id === item.id);
+    const { items, category } = this.props;
+    const isWishing = items.find((i) => {
+      const basicValidation = i.id === item.id && category === i.type;
+      if (!basicValidation) {
+        return false;
+      }
+
+      if (isMultiSeriesCategory(category)) {
+        return i.variant === item.variant;
+      } else {
+        return true;
+      }
+    });
     return {
       item,
       count: isWishing?.count ?? 0,

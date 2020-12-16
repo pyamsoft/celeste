@@ -15,6 +15,7 @@ export class WishListManageInteractor {
       const newItem = new WishListItem({
         id: item.id,
         type: item.type,
+        variant: item.variant,
         count: 1,
         giftedBy: {},
       });

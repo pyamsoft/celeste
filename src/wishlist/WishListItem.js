@@ -3,8 +3,8 @@ import { asID } from "../common/util/id";
 export class WishListItem {
   #data;
   #id;
-  #variant;
   #createdAt;
+  #series;
   #type;
   #count;
   #giftedBy;
@@ -14,7 +14,7 @@ export class WishListItem {
     this.#id = data?.id || "";
     this.#createdAt = data?.createdAt ? new Date(data.createdAt) : null;
     this.#type = data?.type || "";
-    this.#variant = data?.variant || "";
+    this.#series = data?.series || "";
     this.#count = data?.count || 0;
     this.#giftedBy = data?.giftedBy || {};
   }
@@ -39,8 +39,8 @@ export class WishListItem {
     return { ...this.#giftedBy };
   }
 
-  get variant() {
-    return this.#variant;
+  get series() {
+    return this.#series;
   }
 
   updateCount(newCount) {

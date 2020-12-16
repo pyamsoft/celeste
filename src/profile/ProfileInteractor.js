@@ -2,7 +2,6 @@ import { UserWishListRealtime } from "../user-wishlist/UserWishListRealtime";
 import { WishListRealtime } from "../wishlist/WishListRealtime";
 import { UserWishListApi } from "../user-wishlist/UserWishListApi";
 import { WishListInteractor } from "../wishlist/WishListInteractor";
-import { Logger } from "../common/util/logger";
 
 export class ProfileInteractor {
   static watchUserWishList({ userID, onUserListChange }) {
@@ -15,7 +14,6 @@ export class ProfileInteractor {
 
   static async createDefaultUserWishList({ userID }) {
     const existingLists = await UserWishListApi.get(userID);
-    Logger.d("Existing user wish lists: ", userID, existingLists);
     if (!existingLists.id || !existingLists.data) {
       await WishListInteractor.createNewWishList({
         userID,

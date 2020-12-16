@@ -22,8 +22,6 @@ function groupItemsByType(items) {
       continue;
     }
 
-    const key = item.id;
-
     if (!groups[type]) {
       groups[type] = {};
     }
@@ -33,13 +31,25 @@ function groupItemsByType(items) {
         count: item.count,
         giftedBy: item.giftedBy,
       };
-      if (item.variant) {
-        groups[type][key][item.variant] = payload;
+
+      if (item.series) {
+        if (!groups[type][item.series]) {
+          groups[type][item.series] = {};
+        }
+        groups[type][item.series][item.id] = payload;
       } else {
-        groups[type][key] = payload;
+        groups[type][item.id] = payload;
       }
     } else {
-      groups[type][key] = null;
+      if (item.series) {
+        if (!groups[type][item.series]) {
+          groups[type][item.series] = {};
+        }
+
+        groups[type][item.series][item.id] = null;
+      } else {
+        groups[type][item.id] = null;
+      }
     }
   }
 

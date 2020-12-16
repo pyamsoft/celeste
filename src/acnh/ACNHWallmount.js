@@ -3,11 +3,11 @@ import { ACNHItem } from "./ACNHItem";
 export class ACNHWallmount extends ACNHItem {
   static TYPE = "wallmounted";
 
-  #variant;
+  #baseID;
 
   constructor(series, data) {
     super({
-      id: data ? data["internal-id"] || "" : "",
+      id: data ? data["variant-id"] || "" : "",
       name: data?.name["name-USen"] || "",
       price: data?.price || 0,
       image: data?.image_uri || "",
@@ -15,10 +15,10 @@ export class ACNHWallmount extends ACNHItem {
       series,
     });
 
-    this.#variant = data ? data["variant-id"] || "" : "";
+    this.#baseID = data ? data["internal-id"] || "" : "";
   }
 
-  get variant() {
-    return this.#variant;
+  get baseID() {
+    return this.#baseID;
   }
 }

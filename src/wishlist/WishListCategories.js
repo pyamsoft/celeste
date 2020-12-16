@@ -26,4 +26,8 @@ export class WishListCategories {
         return `Unknown: ${category}`;
     }
   }
+
+  static hasSeries(category) {
+    return category === ACNHHouseware.TYPE || category === ACNHWallmount.TYPE;
+  }
 }

@@ -1,15 +1,10 @@
 import React from "react";
 import { Text } from "../common/component/Text";
 import { Img } from "../common/component/Img";
-import { ACNHHouseware } from "../acnh/ACNHHouseware";
-import { ACNHWallmount } from "../acnh/ACNHWallmount";
 import { fitToWindowWidth, remToPx, watchResize } from "../common/util/window";
 import { EmptyButton } from "../common/component/Button";
 import { stopListening } from "../common/util/listener";
-
-function isMultiSeriesCategory(category) {
-  return category === ACNHHouseware.TYPE || category === ACNHWallmount.TYPE;
-}
+import { WishListCategories } from "./WishListCategories";
 
 const IDEAL_ITEM_SIZE = remToPx(12);
 
@@ -57,8 +52,8 @@ export class WishListItems extends React.Component {
           return false;
         }
 
-        if (isMultiSeriesCategory(category)) {
-          return i.variant === item.variant;
+        if (WishListCategories.hasSeries(category)) {
+          return i.series === item.series;
         } else {
           return true;
         }
@@ -74,12 +69,13 @@ export class WishListItems extends React.Component {
         return false;
       }
 
-      if (isMultiSeriesCategory(category)) {
-        return i.variant === item.variant;
+      if (WishListCategories.hasSeries(category)) {
+        return i.series === item.series;
       } else {
         return true;
       }
     });
+
     return {
       item,
       count: isWishing?.count ?? 0,
@@ -105,7 +101,7 @@ export class WishListItems extends React.Component {
         } block w-full overflow-hidden h-full`}
         style={style}
       >
-        {isMultiSeriesCategory(category) ? (
+        {WishListCategories.hasSeries(category) ? (
           <div className="block w-full overflow-x-hidden overflow-y-auto h-full">
             {Object.keys(categoryItems).map((series) => (
               <div
@@ -117,7 +113,7 @@ export class WishListItems extends React.Component {
                   .map(this.mapToWishing)
                   .map(({ item, count, isWishing }) => (
                     <WishListItem
-                      key={`${category}-${series}-${item.variant}-${item.id}`}
+                      key={`${category}-${series}-${item.id}`}
                       item={item}
                       isWishing={isWishing}
                       onAdd={onItemAdded}

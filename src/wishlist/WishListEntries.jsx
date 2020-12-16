@@ -1,10 +1,8 @@
 import React from "react";
-import { Text } from "../common/component/Text";
-import { Img } from "../common/component/Img";
 import { fitToWindowWidth, remToPx, watchResize } from "../common/util/window";
-import { EmptyButton } from "../common/component/Button";
 import { stopListening } from "../common/util/listener";
 import { WishListCategories } from "./WishListCategories";
+import { WishListEntry } from "./entry/WishListEntry";
 
 const IDEAL_ITEM_SIZE = remToPx(12);
 
@@ -19,7 +17,7 @@ function calculatePossibleItemSize() {
   return Math.floor(maxPossibleWidth / count);
 }
 
-export class WishListItems extends React.Component {
+export class WishListEntries extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,6 +61,7 @@ export class WishListItems extends React.Component {
       item,
       count: isWishing?.count ?? 0,
       isWishing: isEditable ? isWishing?.count > 0 : false,
+      note: isWishing?.note ?? "",
     };
   };
 
@@ -74,6 +73,8 @@ export class WishListItems extends React.Component {
       category,
       onItemAdded,
       onItemRemoved,
+      onNoteChanged,
+      isEditable,
     } = this.props;
     const { itemSize } = this.state;
     const categoryItems = acnh[category] || {};
@@ -94,15 +95,18 @@ export class WishListItems extends React.Component {
                 {categoryItems[series]
                   .filter(this.filterVisibleItems)
                   .map(this.mapToWishing)
-                  .map(({ item, count, isWishing }) => (
-                    <WishListItem
+                  .map(({ item, count, note, isWishing }) => (
+                    <WishListEntry
                       key={`${category}-${series}-${item.id}`}
                       item={item}
                       isWishing={isWishing}
                       onAdd={onItemAdded}
                       onRemove={onItemRemoved}
+                      onNoteChanged={onNoteChanged}
                       size={itemSize}
                       count={count}
+                      note={note}
+                      isEditable={isEditable}
                     />
                   ))}
               </div>
@@ -113,15 +117,18 @@ export class WishListItems extends React.Component {
             {Object.values(categoryItems)
               .filter(this.filterVisibleItems)
               .map(this.mapToWishing)
-              .map(({ item, count, isWishing }) => (
-                <WishListItem
+              .map(({ item, count, note, isWishing }) => (
+                <WishListEntry
                   key={`${category}-${item.id}`}
                   item={item}
                   onAdd={onItemAdded}
                   onRemove={onItemRemoved}
+                  onNoteChanged={onNoteChanged}
                   isWishing={isWishing}
                   size={itemSize}
                   count={count}
+                  note={note}
+                  isEditable={isEditable}
                 />
               ))}
           </div>
@@ -129,103 +136,4 @@ export class WishListItems extends React.Component {
       </div>
     );
   }
-}
-
-class WishListItem extends React.Component {
-  generateItemStyle = (size) => {
-    return {
-      width: size,
-      minWidth: size,
-      maxWidth: size,
-
-      height: size,
-      minHeight: size,
-      maxHeight: size,
-    };
-  };
-
-  handleAdd = () => {
-    const { item, onAdd } = this.props;
-    onAdd(item);
-  };
-
-  handleRemove = () => {
-    const { item, onRemove } = this.props;
-    onRemove(item);
-  };
-
-  render() {
-    const { isWishing, item, size, count } = this.props;
-    return (
-      <div className="p-1 cursor-point" style={this.generateItemStyle(size)}>
-        <div
-          className={`relative w-full h-full rounded-lg border-2 ${
-            isWishing
-              ? "bg-green-300 hover:bg-green-400 border-green-400 hover:border-green-500"
-              : "bg-gray-300 hover:bg-gray-100 border-gray-400 hover:border-gray-500"
-          }`}
-        >
-          <Img
-            preload={true}
-            src={item.image}
-            alt={item.name}
-            width={size}
-            height={size}
-          />
-          <Text className="flex flex-row absolute z-10 top-0 left-0 right-0 text-black">
-            <div className="mx-auto mt-3">
-              <div className="px-2">{item.name}</div>
-            </div>
-          </Text>
-          <div className="flex flex-row absolute z-10 bottom-0 left-0 right-0 text-black pb-3">
-            <IconButton
-              className="ml-2 text-red-500"
-              onClick={this.handleRemove}
-            >
-              -
-            </IconButton>
-            <div className="flex-auto" />
-            {count > 0 && (
-              <IconButton className="mx-2 text-white font-bold">
-                {count}
-              </IconButton>
-            )}
-            <div className="flex-auto" />
-            <IconButton
-              className="mr-2 text-green-500"
-              onClick={this.handleAdd}
-            >
-              +
-            </IconButton>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
-const ICON_SIZE = remToPx(2);
-const ICON_STYLE = {
-  width: ICON_SIZE,
-  minWidth: ICON_SIZE,
-  maxWidth: ICON_SIZE,
-
-  height: ICON_SIZE,
-  minHeight: ICON_SIZE,
-  maxHeight: ICON_SIZE,
-};
-
-function IconButton(props) {
-  const { children, className, onClick } = props;
-  return (
-    <EmptyButton
-      className={`my-auto font-size-xl bg-gray-500 hover:bg-gray-300 border-2 border-gray-500 hover:border-gray-300 rounded-lg font-mono ${
-        className ? className : ""
-      }`}
-      onClick={onClick}
-      style={ICON_STYLE}
-    >
-      <div className="m-auto">{children}</div>
-    </EmptyButton>
-  );
 }

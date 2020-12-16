@@ -7,6 +7,7 @@ export class WishListItem {
   #series;
   #type;
   #count;
+  #note;
   #giftedBy;
 
   constructor(data) {
@@ -16,6 +17,7 @@ export class WishListItem {
     this.#type = data?.type || "";
     this.#series = data?.series || "";
     this.#count = data?.count || 0;
+    this.#note = data?.note || "";
     this.#giftedBy = data?.giftedBy || {};
   }
 
@@ -25,6 +27,10 @@ export class WishListItem {
 
   get createdAt() {
     return this.#createdAt;
+  }
+
+  get note() {
+    return this.#note.trim();
   }
 
   get type() {
@@ -41,6 +47,12 @@ export class WishListItem {
 
   get series() {
     return this.#series;
+  }
+
+  updateNote(newNote) {
+    const newItem = new WishListItem(this.#data);
+    newItem.#note = newNote.trim();
+    return newItem;
   }
 
   updateCount(newCount) {

@@ -28,6 +28,7 @@ function groupItemsByType(items) {
         count: item.count,
         giftedBy: item.giftedBy,
         createdAt: item.createdAt ? item.createdAt.toUTCString() : null,
+        note: item.note ? item.note : null,
       };
 
       if (item.series) {

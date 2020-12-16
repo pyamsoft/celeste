@@ -1,7 +1,7 @@
 import React from "react";
 import { WishListTitle } from "./WishListTitle";
 import { WishListTabs } from "./WishListTabs";
-import { WishListItems } from "./WishListItems";
+import { WishListEntries } from "./WishListEntries";
 
 const defaultClassNames = "wish-list block overflow-hidden w-full flex-auto";
 
@@ -25,7 +25,7 @@ export function WishListView(props) {
       <div className="h-full w-full overflow-hidden flex flex-col">
         <WishListTitle name={name} className="mb-3" />
         <WishListTabs category={category} onTabClicked={onCategoryChanged} />
-        <WishListItems
+        <WishListEntries
           className="flex-auto"
           acnh={acnh}
           items={items}

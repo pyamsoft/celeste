@@ -5,6 +5,9 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@craco/craco": "6.0.0",
+    "@fortawesome/fontawesome-svg-core": "1.2.32",
+    "@fortawesome/free-solid-svg-icons": "5.15.1",
+    "@fortawesome/react-fontawesome": "0.1.13",
     "@runmeetly/cache-man": "0.2.1",
     "@tailwindcss/postcss7-compat": "2.0.2",
     "@testing-library/jest-dom": "5.11.6",

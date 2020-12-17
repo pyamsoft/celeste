@@ -104,6 +104,7 @@ export class WishListApi {
       updates[`${FirePaths.USER_WISHLISTS}/${userID}/${wishListID}`] = now;
       updates[`${FirePaths.WISHLISTS}/${wishListID}`] = payload;
       await FireDatabase.ref().update(updates);
+      return wishListID;
     } catch (e) {
       logger.e(e, "Failed to create itemlist reference");
       throw e;

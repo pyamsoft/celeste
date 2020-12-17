@@ -50,34 +50,32 @@ export class WishListItem {
   }
 
   updateNote(newNote) {
-    const newItem = new WishListItem(this.#data);
-    newItem.#note = newNote.trim();
-    return newItem;
+    return new WishListItem({ ...this.#data, note: newNote.trim() });
   }
 
   updateCount(newCount) {
-    const newItem = new WishListItem(this.#data);
-    newItem.#count = newCount;
-    return newItem;
+    return new WishListItem({ ...this.#data, count: newCount });
+  }
+
+  replaceGiftedBy(giftedBy) {
+    return new WishListItem({ ...this.#data, giftedBy });
   }
 
   updateGiftedBy(userID, newCount) {
-    const newItem = new WishListItem(this.#data);
-    newItem.#giftedBy[userID] = newCount;
-    return newItem;
+    const giftedBy = this.#giftedBy;
+    giftedBy[userID] = newCount;
+    return new WishListItem({ ...this.#data, giftedBy });
   }
 
   clearGiftedBy(userID) {
-    const newItem = new WishListItem(this.#data);
     const newGiftedBy = {};
-    for (const key of Object.keys(newItem.#giftedBy)) {
+    for (const key of Object.keys(this.#giftedBy)) {
       if (key === userID) {
         continue;
       }
-      newGiftedBy[key] = newItem.#giftedBy[key];
+      newGiftedBy[key] = this.#giftedBy[key];
     }
-    newItem.#giftedBy = newGiftedBy;
-    return newItem;
+    return new WishListItem({ ...this.#data, giftedBy: newGiftedBy });
   }
 
   static getGiftedByCount(giftedBy) {

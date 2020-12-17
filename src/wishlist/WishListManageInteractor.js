@@ -1,6 +1,21 @@
 import { WishListItem } from "./WishListItem";
 
 export class WishListManageInteractor {
+  static async replaceGiftedBy({ list, items }) {
+    // Operate on a copy of the list
+    const newList = list.map((i) => i);
+    for (const item of items) {
+      const updateIndex = newList.findIndex(
+        (i) =>
+          i.id === item.id && i.type === item.type && i.series === item.series
+      );
+      if (updateIndex >= 0) {
+        const currentItem = newList[updateIndex];
+        newList[updateIndex] = currentItem.replaceGiftedBy(item.giftedBy);
+      }
+    }
+    return newList;
+  }
 
   static async itemAdded({ list, item }) {
     // Operate on a copy of the list

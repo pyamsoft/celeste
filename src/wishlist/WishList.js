@@ -71,8 +71,6 @@ export class WishList {
   }
 
   updateItems(newItems) {
-    const newWishList = new WishList(this.#data);
-    newWishList.#items = newItems;
-    return newWishList;
+    return new WishList({ ...this.#data, items: newItems });
   }
 }

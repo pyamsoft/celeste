@@ -79,4 +79,8 @@ export class WishListItem {
     newItem.#giftedBy = newGiftedBy;
     return newItem;
   }
+
+  static getGiftedByCount(giftedBy) {
+    return Object.values(giftedBy).reduce((a, b) => a + b, 0);
+  }
 }

@@ -6,8 +6,7 @@ import { eatClick, remToPx } from "../../common/util/window";
 import { PopOver } from "../../common/component/PopOver";
 import { NotePopup } from "./NotePopup";
 import { Text } from "../../common/component/Text";
-
-const DO_NOT_REVEAL_GIFTING_INFO = true;
+import { WishListItem } from "../WishListItem";
 
 export function EntryBottom(props) {
   const {
@@ -57,16 +56,18 @@ function NotesRow(props) {
   );
 }
 
-function getGiftedAmount(giftedBy) {
-  return Object.values(giftedBy).reduce((a, b) => a + b, 0);
-}
-
 function TallyButton(props) {
-  const { item, giftedBy, count } = props;
-  const amount = getGiftedAmount(giftedBy);
+  const { giftedBy, count } = props;
+  const amount = WishListItem.getGiftedByCount(giftedBy);
+
+  if (count <= 0) {
+    return null;
+  }
+
+  const gifts = Object.keys(giftedBy);
+
   return (
     <PopOver
-      disabled={amount <= 0 || DO_NOT_REVEAL_GIFTING_INFO}
       trigger={
         <div className="need-this-div-for-popover ml-3 my-auto">
           {amount}&nbsp;/&nbsp;{count}
@@ -74,13 +75,17 @@ function TallyButton(props) {
       }
     >
       <div className="p-2 w-full h-full">
-        <Text className="mb-2">{item.name} gifted by:</Text>
-        {Object.keys(giftedBy).map((userID) => (
-          <div className="flex flex-row flex-nowrap" key={userID}>
-            <Text className="mr-auto">{userID}</Text>
-            <Text className="ml-2">{giftedBy[userID]}</Text>
-          </div>
-        ))}
+        <small>Gifted by:</small>
+        {gifts.length <= 0 ? (
+          <div className="block w-full">Nobody yet :(</div>
+        ) : (
+          gifts.map((userID) => (
+            <div className="flex flex-row flex-nowrap" key={userID}>
+              <Text className="mr-auto">{userID}</Text>
+              <Text className="ml-2">{giftedBy[userID]}</Text>
+            </div>
+          ))
+        )}
       </div>
     </PopOver>
   );
@@ -125,7 +130,7 @@ function NoteButton(props) {
 
 function CountButtons(props) {
   const { count, onAdd, onRemove, isEditable, giftedBy } = props;
-  const amount = getGiftedAmount(giftedBy);
+  const amount = WishListItem.getGiftedByCount(giftedBy);
   return (
     <div className="flex flex-row flex-nowrap w-full">
       <IconButton

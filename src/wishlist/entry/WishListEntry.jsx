@@ -5,6 +5,7 @@ import { EntryBottom } from "./EntryBottom";
 import _ from "lodash";
 import { PopOver } from "../../common/component/PopOver";
 import { EntryInfoPopup } from "./EntryInfoPopup";
+import { WishListItem } from "../WishListItem";
 
 export class WishListEntry extends React.Component {
   constructor(props) {
@@ -71,8 +72,10 @@ export class WishListEntry extends React.Component {
           trigger={
             <div
               className={`relative w-full h-full rounded-lg border-2 ${
-                isWishing
+                WishListItem.getGiftedByCount(giftedBy) >= count && count > 0
                   ? "bg-green-300 hover:bg-green-400 border-green-400 hover:border-green-500"
+                  : isWishing
+                  ? "bg-yellow-300 hover:bg-yellow-400 border-yellow-400 hover:border-yellow-500"
                   : "bg-gray-300 hover:bg-gray-100 border-gray-400 hover:border-gray-500"
               }`}
             >

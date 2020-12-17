@@ -57,7 +57,6 @@ export class PopOver extends React.Component {
       trigger,
       children,
       keepInside,
-      disabled,
       on,
     } = this.props;
     return (
@@ -66,7 +65,7 @@ export class PopOver extends React.Component {
         trigger={
           typeof trigger === TYPE_FUNCTION ? trigger(this.operations) : trigger
         }
-        on={disabled ? [] : on}
+        on={on}
         position={position}
         keepTooltipInside={keepInside}
         closeOnDocumentClick={closeOnClickOutside}

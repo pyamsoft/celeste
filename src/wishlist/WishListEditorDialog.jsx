@@ -40,12 +40,11 @@ export class WishListEditorDialog extends React.Component {
     this.handleCommitWishList(async () => {
       const { user } = this.props;
       try {
-await WishListInteractor.createNewWishList({
+        await WishListInteractor.createNewWishList({
           userID: user.id,
           wishListName: name,
           items,
         });
-        logger.d("New wish list created:");
       } catch (e) {
         logger.e(e, "Error creating new wish list");
       }
@@ -62,7 +61,6 @@ await WishListInteractor.createNewWishList({
           wishListName: name,
           items,
         });
-        logger.d("Wish list updated");
       } catch (e) {
         logger.e(e, "Error creating new wish list");
       }

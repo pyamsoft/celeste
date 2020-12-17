@@ -1,8 +1,5 @@
-import { Logger } from "../common/util/logger";
 import { UserApi } from "./UserApi";
 import { PartialUser } from "./PartialUser";
-
-const logger = Logger.tag("UserRealtime");
 
 export class UserRealtime {
   static watch(userID, onChange) {
@@ -11,7 +8,6 @@ export class UserRealtime {
         return;
       }
 
-      logger.d("User changed: ", id, user);
       onChange(new PartialUser(user));
     });
   }

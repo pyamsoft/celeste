@@ -27,7 +27,6 @@ export class Profile extends React.Component {
     this.userListListener = ProfileInteractor.watchUserWishList({
       userID: user.id,
       onUserListChange: (userList) => {
-        logger.d("User list updated: ", userList);
         this.setState({ userList }, () => {
           this.registerItemListeners();
         });
@@ -91,7 +90,6 @@ export class Profile extends React.Component {
         this.itemListListeners[wID] = ProfileInteractor.watchWishList({
           itemID: wID,
           onInsertOrUpdate: (list) => {
-            logger.d("WishList list inserted/updated: ", list);
             const { wishLists } = this.state;
             const newList = wishLists || [];
             const index = newList.findIndex((w) => w.id === list.id);
@@ -103,7 +101,6 @@ export class Profile extends React.Component {
             this.setState({ wishLists: newList });
           },
           onDelete: (listID) => {
-            logger.d("WishList list deleted ", listID);
             const { wishLists } = this.state;
             const newList = wishLists || [];
             const index = newList.findIndex((w) => w.id === listID);

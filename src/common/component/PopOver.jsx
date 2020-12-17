@@ -8,6 +8,7 @@ const StyledPopup = styled(Popup)`
   &-overlay {
   }
   &-content {
+    padding: 0;
   }
 `;
 
@@ -59,7 +60,9 @@ export class PopOver extends React.Component {
     return (
       <StyledPopup
         ref={this.setRef}
-        trigger={trigger(this.operations)}
+        trigger={
+          typeof trigger === TYPE_FUNCTION ? trigger(this.operations) : trigger
+        }
         position={position}
         keepTooltipInside={keepInside}
         closeOnDocumentClick={closeOnClickOutside}

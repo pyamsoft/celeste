@@ -1,8 +1,5 @@
-import { Logger } from "../common/util/logger";
 import { WishListApi } from "./WishListApi";
 import { WishList } from "./WishList";
-
-const logger = Logger.tag("WishListInteractor");
 
 function validate(userID, items) {
   if (!userID) {
@@ -67,7 +64,6 @@ export class WishListInteractor {
 
     const validItems = items.filter((i) => i.count > 0);
 
-    logger.d("Create new wishlist: ", userID, trimmed, validItems);
     await WishListApi.create(userID, wishListName, validItems);
   }
 

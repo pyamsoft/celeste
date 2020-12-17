@@ -18,7 +18,6 @@ export class AuthApi {
   }
 
   static async processLoginEmail(email, url) {
-    logger.d("Check url: ", url);
     if (!FireAuth.isSignInWithEmailLink(url)) {
       return AuthApi.LINK_NO_LOGIN;
     }

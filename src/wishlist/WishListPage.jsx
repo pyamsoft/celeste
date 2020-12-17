@@ -48,9 +48,7 @@ class WishListController extends React.Component {
     this.setState({ loading: true }, async () => {
       const payload = { loading: false };
       try {
-        logger.d("Loading wishlist: ", id);
         const wishlist = await WishListInteractor.get({ itemID: id });
-        logger.d("Loaded wishlist: ", wishlist);
         payload.wishlist = wishlist;
         payload.error = null;
       } catch (e) {
@@ -66,21 +64,19 @@ class WishListController extends React.Component {
   beginWatchingWishlist = () => {
     const { wishlist } = this.state;
     if (!wishlist) {
-      logger.d("Cannot watch null wishlist");
+      logger.w("Cannot watch null wishlist");
       return;
     }
 
     this.wishListListener = ProfileInteractor.watchWishList({
       itemID: wishlist.id,
       onInsertOrUpdate: (list) => {
-        logger.d("WishList list inserted/updated: ", list);
         const { wishlist } = this.state;
         if (wishlist.id === list.id) {
           this.setState({ wishlist: list, error: null });
         }
       },
       onDelete: (listID) => {
-        logger.d("WishList list deleted ", listID);
         const { wishlist } = this.state;
         if (wishlist.id === listID) {
           this.setState({
@@ -154,7 +150,6 @@ class WishListController extends React.Component {
           wishListID: wishlist.id,
           items: wishlist.items,
         });
-        logger.d("Published new gifted by amounts");
       } catch (e) {
         logger.e(e, "Unable to gift new items");
       } finally {

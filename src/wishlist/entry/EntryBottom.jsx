@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import { remToPx } from "../../common/util/window";
 import { PopOver } from "../../common/component/PopOver";
-import { NotePopup } from "./EntryInfoPopup";
+import { NotePopup } from "./NotePopup";
 
 export function EntryBottom(props) {
   const {

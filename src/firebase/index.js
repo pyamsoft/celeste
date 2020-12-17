@@ -8,7 +8,6 @@ import { firebaseConfig } from "./config";
 const logger = Logger.tag("Firebase");
 
 try {
-  logger.d("Initialize firebase with config: ", firebaseConfig);
   firebase.setLogLevel(IS_DEBUG_MODE ? "debug" : "silent");
   firebase.onLog(({ level, message, args }) => {
     switch (level) {

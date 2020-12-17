@@ -72,7 +72,6 @@ export class App extends React.Component {
           this.userListener = AppInteractor.watchUser({
             authUID: auth.id,
             onUserChanged: async (partial) => {
-              logger.d("Got partial user: ", partial);
               const user = await AppInteractor.startSessionForUser({
                 auth,
                 user: partial,
@@ -91,7 +90,6 @@ export class App extends React.Component {
   loadACNH = (key, endpoint) => {
     endpoint()
       .then((result) => {
-        logger.d("Loaded all", key, result);
         const { acnh } = this.state;
         acnh[key] = result;
         this.setState({ acnh });

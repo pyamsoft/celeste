@@ -3,6 +3,9 @@ import { fitToWindowWidth, remToPx, watchResize } from "../common/util/window";
 import { stopListening } from "../common/util/listener";
 import { WishListCategories } from "./WishListCategories";
 import { WishListEntry } from "./entry/WishListEntry";
+import { FixedSizeList } from "react-window";
+import { Logger } from "../common/util/logger";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 const IDEAL_ITEM_SIZE = remToPx(12);
 
@@ -135,11 +138,48 @@ export class WishListEntries extends React.Component {
     };
   };
 
-  render() {
+  generateRenderables = () => {
+    const { acnh, category } = this.props;
+    const categoryItems = acnh[category] || {};
+
+    if (WishListCategories.hasSeries(category)) {
+      const result = {};
+      const seriesList = Object.keys(categoryItems);
+      for (const series of seriesList) {
+        const renderable = categoryItems[series]
+          .filter(this.filterVisibleItems)
+          .sort(this.sortItems)
+          .map(this.mapToWishing);
+        if (renderable.length > 0) {
+          result[series] = renderable;
+        }
+      }
+      return result;
+    } else {
+      return Object.values(categoryItems)
+        .filter(this.filterVisibleItems)
+        .sort(this.sortItems)
+        .map(this.mapToWishing);
+    }
+  };
+
+  renderSeriesRow = (renderables, index, style) => {
+    const seriesList = Object.keys(renderables);
+    const series = seriesList[index];
+
+    return (
+      <div
+        key={series}
+        style={style}
+        className="flex flex-row flex-nowrap overflow-x-auto"
+      >
+        {renderables[series].map((entry) => this.renderEntry(entry, series))}
+      </div>
+    );
+  };
+
+  renderEntry = (entry, series) => {
     const {
-      className,
-      style,
-      acnh,
       category,
       onItemAdded,
       onItemRemoved,
@@ -147,7 +187,34 @@ export class WishListEntries extends React.Component {
       isEditable,
     } = this.props;
     const { itemSize } = this.state;
-    const categoryItems = acnh[category] || {};
+    const { item, ...rest } = entry;
+    return (
+      <WishListEntry
+        {...rest}
+        key={`${category}-${series}-${item.id}`}
+        item={item}
+        onAdd={onItemAdded}
+        onRemove={onItemRemoved}
+        onNoteChanged={onNoteChanged}
+        size={itemSize}
+        isEditable={isEditable}
+      />
+    );
+  };
+
+  render() {
+    const {
+      className,
+      style,
+      category,
+      onItemAdded,
+      onItemRemoved,
+      onNoteChanged,
+      isEditable,
+    } = this.props;
+    const { itemSize } = this.state;
+    const renderables = this.generateRenderables();
+    Logger.d("Renderables: ", renderables);
     return (
       <div
         className={`${
@@ -156,49 +223,34 @@ export class WishListEntries extends React.Component {
         style={style}
       >
         {WishListCategories.hasSeries(category) ? (
-          <div className="block w-full overflow-x-hidden overflow-y-auto h-full">
-            {Object.keys(categoryItems).map((series) => (
-              <div
-                key={series}
-                className="flex flex-row flex-nowrap overflow-x-auto"
+          <AutoSizer>
+            {({ height, width }) => (
+              <FixedSizeList
+                height={height}
+                width={width}
+                itemSize={itemSize}
+                itemCount={Object.keys(renderables).length}
               >
-                {categoryItems[series]
-                  .filter(this.filterVisibleItems)
-                  .sort(this.sortItems)
-                  .map(this.mapToWishing)
-                  .map(({ item, ...rest }) => (
-                    <WishListEntry
-                      {...rest}
-                      key={`${category}-${series}-${item.id}`}
-                      item={item}
-                      onAdd={onItemAdded}
-                      onRemove={onItemRemoved}
-                      onNoteChanged={onNoteChanged}
-                      size={itemSize}
-                      isEditable={isEditable}
-                    />
-                  ))}
-              </div>
-            ))}
-          </div>
+                {({ index, style }) =>
+                  this.renderSeriesRow(renderables, index, style)
+                }
+              </FixedSizeList>
+            )}
+          </AutoSizer>
         ) : (
           <div className="flex flex-row flex-wrap overflow-x-hidden overflow-y-auto h-full">
-            {Object.values(categoryItems)
-              .filter(this.filterVisibleItems)
-              .sort(this.sortItems)
-              .map(this.mapToWishing)
-              .map(({ item, ...rest }) => (
-                <WishListEntry
-                  {...rest}
-                  key={`${category}-${item.id}`}
-                  item={item}
-                  onAdd={onItemAdded}
-                  onRemove={onItemRemoved}
-                  onNoteChanged={onNoteChanged}
-                  size={itemSize}
-                  isEditable={isEditable}
-                />
-              ))}
+            {renderables.map(({ item, ...rest }) => (
+              <WishListEntry
+                {...rest}
+                key={`${category}-${item.id}`}
+                item={item}
+                onAdd={onItemAdded}
+                onRemove={onItemRemoved}
+                onNoteChanged={onNoteChanged}
+                size={itemSize}
+                isEditable={isEditable}
+              />
+            ))}
           </div>
         )}
       </div>

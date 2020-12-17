@@ -4,7 +4,8 @@ import { WishListTabs } from "./WishListTabs";
 import { WishListEntries } from "./WishListEntries";
 import { WishListSearch } from "./WishListSearch";
 
-const defaultClassNames = "wish-list block overflow-hidden w-full flex-auto";
+const defaultClassNames =
+  "wish-list block overflow-hidden w-full flex-auto relative";
 
 export function WishListView(props) {
   const { className, style, ...rest } = props;
@@ -27,7 +28,7 @@ export function WishListView(props) {
       className={`${defaultClassNames} ${className ? className : ""}`}
       style={style}
     >
-      <div className="h-full w-full overflow-hidden flex flex-col">
+      <div className="absolute inset-0 overflow-hidden flex flex-col">
         <WishListTitle
           isEditable={isEditable}
           name={name}

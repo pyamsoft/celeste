@@ -70,6 +70,7 @@ export class PopOver extends React.Component {
     return (
       <StyledPopup
         ref={this.setRef}
+        className="celeste-popup"
         trigger={
           typeof trigger === TYPE_FUNCTION ? trigger(this.operations) : trigger
         }

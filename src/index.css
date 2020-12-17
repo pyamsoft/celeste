@@ -8,9 +8,25 @@
 }
 
 .celeste {
-  background-repeat: repeat;
-  background-position: top center;
-  background-size: 50%;
-  background-color: #0eb9ba;
-  background-image: url("images/tile-leaf-green.jpg");
+  background-repeat: repeat !important;
+  background-position: top center !important;
+  background-size: 50% !important;
+  background-color: #0eb9ba !important;
+  background-image: url("images/tile-leaf-green.jpg") !important;
+}
+
+.celeste-popup-content {
+  background-repeat: repeat !important;
+  background-position: top center !important;
+  background-size: 400px !important;
+  background-color: #fde295 !important;
+  background-image: url("images/tile-faces-yellow.jpg") !important;
+}
+
+.celeste-dialog {
+  background-repeat: repeat !important;
+  background-position: top center !important;
+  background-size: 30% !important;
+  background-color: #fde295 !important;
+  background-image: url("images/tile-faces-yellow.jpg") !important;
 }

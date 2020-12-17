@@ -24,6 +24,12 @@ const CUSTOM_CONTENT_STYLE = {
   bottom: "auto",
   marginRight: "-50%",
   transform: "translate(-50%, -50%)",
+
+  backgroundColor: undefined,
+  backgroundPosition: undefined,
+  backgroundRepeat: undefined,
+  backgroundSize: undefined,
+  backgroundImage: undefined,
 };
 
 const CUSTOM_OVERLAY_STYLE = {
@@ -98,7 +104,7 @@ export class Dialog extends React.Component {
         overlayClassName="focus:outline-none"
         className={`${defaultClassNames} ${
           className ? className : ""
-        } focus:outline-none`}
+        } focus:outline-none celeste-dialog`}
       >
         <div className="block w-full h-full overflow-hidden">{children}</div>
       </Modal>

@@ -6,7 +6,7 @@ export function WishListSaveRow(props) {
   return (
     <div className={`block w-full ${className ? className : ""}`} style={style}>
       <div className="flex flex-row flex-nowrap w-full">
-        <CancelButton className="ml-auto" onClick={onCancel}>
+        <CancelButton className="ml-auto px-3 py-2" onClick={onCancel}>
           Cancel
         </CancelButton>
       </div>

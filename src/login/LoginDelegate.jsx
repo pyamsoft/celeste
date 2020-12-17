@@ -43,14 +43,18 @@ export class LoginDelegate extends React.Component {
   };
 
   render() {
+    const { children } = this.props;
     const { email, loggingIn } = this.state;
     return (
-      <LoginFields
-        loggingIn={loggingIn}
-        email={email}
-        onEmailChanged={this.handleEmailChanged}
-        onLogin={this.handleLogin}
-      />
+      <React.Fragment>
+        <LoginFields
+          loggingIn={loggingIn}
+          email={email}
+          onEmailChanged={this.handleEmailChanged}
+          onLogin={this.handleLogin}
+        />
+        {children}
+      </React.Fragment>
     );
   }
 }

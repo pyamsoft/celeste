@@ -75,10 +75,10 @@ export class WishListEntry extends React.Component {
               key={`trigger-${item.id}`}
               className={`relative w-full h-full rounded-lg border-2 ${
                 WishListItem.getGiftedByCount(giftedBy) >= count && count > 0
-                  ? "bg-green-300 hover:bg-green-400 border-green-400 hover:border-green-500"
+                  ? "bg-indigo-200 hover:bg-indigo-100 border-indigo-400 hover:border-indigo-600"
                   : isWishing
-                  ? "bg-yellow-300 hover:bg-yellow-400 border-yellow-400 hover:border-yellow-500"
-                  : "bg-gray-300 hover:bg-gray-100 border-gray-400 hover:border-gray-500"
+                  ? "bg-pink-200 hover:bg-pink-100 border-pink-400 hover:border-pink-600"
+                  : "bg-gray-300 hover:bg-gray-100 border-gray-400 hover:border-gray-600"
               }`}
             >
               <Img

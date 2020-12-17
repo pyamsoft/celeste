@@ -5,6 +5,43 @@ import { WishListCategories } from "./WishListCategories";
 import { WishListEntry } from "./entry/WishListEntry";
 import { areEqual, FixedSizeGrid, FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
+import memoize from "memoize-one";
+
+const createSeriesData = memoize(
+  (
+    category,
+    onItemAdded,
+    onItemRemoved,
+    onNoteChanged,
+    isEditable,
+    renderables
+  ) => ({
+    category,
+    onItemAdded,
+    onItemRemoved,
+    onNoteChanged,
+    isEditable,
+    renderables,
+  })
+);
+
+const createItemData = memoize(
+  (
+    itemCount,
+    onItemAdded,
+    onItemRemoved,
+    onNoteChanged,
+    isEditable,
+    renderables
+  ) => ({
+    itemCount,
+    onItemAdded,
+    onItemRemoved,
+    onNoteChanged,
+    isEditable,
+    renderables,
+  })
+);
 
 const IDEAL_ITEM_SIZE = remToPx(12);
 
@@ -134,11 +171,11 @@ export class WishListEntries extends React.Component {
     };
   };
 
-  generateRenderables = () => {
+  generateRenderables = (isRenderSeries) => {
     const { acnh, category } = this.props;
     const categoryItems = acnh[category] || {};
 
-    if (WishListCategories.hasSeries(category)) {
+    if (isRenderSeries) {
       const result = {};
       const seriesList = Object.keys(categoryItems);
       for (const series of seriesList) {
@@ -170,7 +207,27 @@ export class WishListEntries extends React.Component {
       isEditable,
     } = this.props;
     const { itemCount } = this.state;
-    const renderables = this.generateRenderables();
+    const isRenderSeries = WishListCategories.hasSeries(category);
+    const renderables = this.generateRenderables(isRenderSeries);
+
+    const itemData = isRenderSeries
+      ? createSeriesData(
+          category,
+          onItemAdded,
+          onItemRemoved,
+          onNoteChanged,
+          isEditable,
+          renderables
+        )
+      : createItemData(
+          itemCount,
+          onItemAdded,
+          onItemRemoved,
+          onNoteChanged,
+          isEditable,
+          renderables
+        );
+
     return (
       <div
         className={`${
@@ -178,7 +235,7 @@ export class WishListEntries extends React.Component {
         } block w-full overflow-hidden h-full popover-boundary`}
         style={style}
       >
-        {WishListCategories.hasSeries(category) ? (
+        {isRenderSeries ? (
           <div className="block overflow-x-hidden overflow-y-auto h-full">
             <AutoSizer>
               {({ height, width }) => (
@@ -187,18 +244,9 @@ export class WishListEntries extends React.Component {
                   width={width}
                   itemSize={IDEAL_ITEM_SIZE}
                   itemCount={Object.keys(renderables).length}
+                  itemData={itemData}
                 >
-                  {(data) => (
-                    <RenderSeries
-                      {...data}
-                      category={category}
-                      onItemAdded={onItemAdded}
-                      onItemRemoved={onItemRemoved}
-                      onNoteChanged={onNoteChanged}
-                      isEditable={isEditable}
-                      renderables={renderables}
-                    />
-                  )}
+                  {RenderSeries}
                 </FixedSizeList>
               )}
             </AutoSizer>
@@ -214,18 +262,9 @@ export class WishListEntries extends React.Component {
                   rowHeight={IDEAL_ITEM_SIZE}
                   columnCount={itemCount}
                   columnWidth={IDEAL_ITEM_SIZE}
+                  itemData={itemData}
                 >
-                  {(data) => (
-                    <RenderRow
-                      {...data}
-                      onItemAdded={onItemAdded}
-                      onItemRemoved={onItemRemoved}
-                      onNoteChanged={onNoteChanged}
-                      isEditable={isEditable}
-                      itemCount={itemCount}
-                      renderables={renderables}
-                    />
-                  )}
+                  {RenderRow}
                 </FixedSizeGrid>
               )}
             </AutoSizer>
@@ -238,27 +277,29 @@ export class WishListEntries extends React.Component {
 
 const RenderSeries = React.memo((props) => {
   const {
-    category,
-    onItemAdded,
-    onItemRemoved,
-    onNoteChanged,
-    isEditable,
-    renderables,
     index,
     style,
+    data: {
+      category,
+      onItemAdded,
+      onItemRemoved,
+      onNoteChanged,
+      isEditable,
+      renderables,
+    },
   } = props;
   const seriesList = Object.keys(renderables);
   const series = seriesList[index];
 
   return (
     <div
-      key={`${category}-${series}-${index}`}
+      key={`${category}-${series}`}
       style={style}
       className="flex flex-row flex-nowrap overflow-x-auto"
     >
       {renderables[series].map((entry) => (
         <RenderEntry
-          key={`${category}-${series}-${entry.item.id}`}
+          key={entry.item.id}
           category={category}
           onItemAdded={onItemAdded}
           onItemRemoved={onItemRemoved}
@@ -274,15 +315,17 @@ const RenderSeries = React.memo((props) => {
 
 const RenderRow = React.memo((props) => {
   const {
-    onItemAdded,
-    onItemRemoved,
-    onNoteChanged,
-    isEditable,
-    itemCount,
-    renderables,
     style,
     rowIndex,
     columnIndex,
+    data: {
+      onItemAdded,
+      onItemRemoved,
+      onNoteChanged,
+      isEditable,
+      itemCount,
+      renderables,
+    },
   } = props;
   const index = rowIndex * itemCount + columnIndex;
   const entry = renderables[index];
@@ -313,6 +356,7 @@ const RenderEntry = React.memo((props) => {
   return (
     <WishListEntry
       {...rest}
+      key={item.id}
       item={item}
       onAdd={onItemAdded}
       onRemove={onItemRemoved}

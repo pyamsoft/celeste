@@ -68,9 +68,11 @@ export class WishListEntry extends React.Component {
     return (
       <div className="p-1 cursor-point" style={this.generateItemStyle(size)}>
         <PopOver
+          key={`popover-${item.id}`}
           position={["right center", "left center"]}
           trigger={
             <div
+              key={`trigger-${item.id}`}
               className={`relative w-full h-full rounded-lg border-2 ${
                 WishListItem.getGiftedByCount(giftedBy) >= count && count > 0
                   ? "bg-green-300 hover:bg-green-400 border-green-400 hover:border-green-500"
@@ -80,6 +82,7 @@ export class WishListEntry extends React.Component {
               }`}
             >
               <Img
+                key={`img-${item.id}`}
                 preload={true}
                 src={item.image}
                 alt={item.name}
@@ -87,8 +90,13 @@ export class WishListEntry extends React.Component {
                 height={size}
               />
 
-              <EntryTop item={item} isEditable={isEditable} />
+              <EntryTop
+                key={`top-${item.id}`}
+                item={item}
+                isEditable={isEditable}
+              />
               <EntryBottom
+                key={`bottom-${item.id}`}
                 item={item}
                 count={count}
                 note={note}
@@ -102,7 +110,11 @@ export class WishListEntry extends React.Component {
           }
         >
           {(popOverOperations) => (
-            <EntryInfoPopup {...popOverOperations} item={item} />
+            <EntryInfoPopup
+              {...popOverOperations}
+              key={`info-${item.id}`}
+              item={item}
+            />
           )}
         </PopOver>
       </div>

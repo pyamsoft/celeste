@@ -1,7 +1,6 @@
 import { asID } from "../common/util/id";
 
 export class WishListItem {
-  #data;
   #id;
   #createdAt;
   #series;
@@ -11,7 +10,6 @@ export class WishListItem {
   #giftedBy;
 
   constructor(data) {
-    this.#data = data;
     this.#id = data?.id || "";
     this.#createdAt = data?.createdAt ? new Date(data.createdAt) : null;
     this.#type = data?.type || "";
@@ -49,36 +47,32 @@ export class WishListItem {
     return this.#series;
   }
 
+  static getGiftedByCount(giftedBy) {
+    return Object.values(giftedBy).reduce((a, b) => a + b, 0);
+  }
+
   updateNote(newNote) {
-    return new WishListItem({ ...this.#data, note: newNote.trim() });
+    this.#note = newNote;
+    return this;
   }
 
   updateCount(newCount) {
-    return new WishListItem({ ...this.#data, count: newCount });
+    this.#count = newCount;
+    return this;
   }
 
   replaceGiftedBy(giftedBy) {
-    return new WishListItem({ ...this.#data, giftedBy });
+    this.#giftedBy = giftedBy;
+    return this;
   }
 
   updateGiftedBy(userID, newCount) {
-    const giftedBy = this.#giftedBy;
-    giftedBy[userID] = newCount;
-    return new WishListItem({ ...this.#data, giftedBy });
+    this.#giftedBy[userID] = newCount;
+    return this;
   }
 
   clearGiftedBy(userID) {
-    const newGiftedBy = {};
-    for (const key of Object.keys(this.#giftedBy)) {
-      if (key === userID) {
-        continue;
-      }
-      newGiftedBy[key] = this.#giftedBy[key];
-    }
-    return new WishListItem({ ...this.#data, giftedBy: newGiftedBy });
-  }
-
-  static getGiftedByCount(giftedBy) {
-    return Object.values(giftedBy).reduce((a, b) => a + b, 0);
+    this.#giftedBy[userID] = 0;
+    return this;
   }
 }

@@ -35,6 +35,7 @@ export function EntryBottom(props) {
         onAdd={onAdd}
         onRemove={onRemove}
         giftedBy={giftedBy}
+        isEditable={isEditable}
       />
     </div>
   );
@@ -123,26 +124,22 @@ function NoteButton(props) {
 }
 
 function CountButtons(props) {
-  const { count, onAdd, onRemove, giftedBy } = props;
+  const { count, onAdd, onRemove, isEditable, giftedBy } = props;
   const amount = getGiftedAmount(giftedBy);
   return (
     <div className="flex flex-row flex-nowrap w-full">
       <IconButton
         className="ml-2 text-red-500"
         onClick={onRemove}
-        disabled={amount <= 0}
+        disabled={!isEditable && amount <= 0}
       >
         -
       </IconButton>
       <div className="flex-auto" />
-      {count > 0 && (
-        <IconButton className="mx-2 text-white">{count}</IconButton>
-      )}
-      <div className="flex-auto" />
       <IconButton
         className="mr-2 text-green-500"
         onClick={onAdd}
-        disabled={amount >= count}
+        disabled={!isEditable && amount >= count}
       >
         +
       </IconButton>

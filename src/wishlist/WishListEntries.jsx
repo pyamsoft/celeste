@@ -36,6 +36,9 @@ export class WishListEntries extends React.Component {
   }
 
   getSearchPriority = (name) => {
+    if (!name) {
+      return 0;
+    }
     const { search } = this.props;
     const cleanSearch = search.trim().toLowerCase();
     const cleanName = name.trim().toLowerCase();
@@ -79,7 +82,7 @@ export class WishListEntries extends React.Component {
         if (noSearch) {
           return true;
         } else {
-          return this.getSearchPriority(i.name) > 0;
+          return this.getSearchPriority(item.name) > 0;
         }
       }
     });

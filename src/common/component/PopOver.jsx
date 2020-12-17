@@ -6,9 +6,17 @@ const TYPE_FUNCTION = typeof function () {};
 
 const StyledPopup = styled(Popup)`
   &-overlay {
+    // Above the Dialog
+    z-index: 30;
   }
   &-content {
+    // Above the Dialog
+    z-index: 40;
+
+    // No padding
     padding: 0;
+
+    // Fit content
     width: auto !important;
   }
 `;

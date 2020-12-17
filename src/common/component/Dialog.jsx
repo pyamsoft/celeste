@@ -17,7 +17,7 @@ const { ...DEFAULT_OVERLAY_STYLE } = Modal.defaultStyles.overlay;
 
 const CUSTOM_CONTENT_STYLE = {
   ...DEFAULT_CONTENT_STYLE,
-  zIndex: 9999,
+  zIndex: 10,
   top: "50%",
   left: "50%",
   right: "auto",
@@ -28,7 +28,7 @@ const CUSTOM_CONTENT_STYLE = {
 
 const CUSTOM_OVERLAY_STYLE = {
   ...DEFAULT_OVERLAY_STYLE,
-  zIndex: 5000,
+  zIndex: 20,
   background: `rgba(0, 0, 0, 0.2)`,
 };
 

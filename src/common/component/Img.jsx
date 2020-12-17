@@ -19,8 +19,8 @@ export class Img extends React.Component {
     this.ref = ref;
   };
 
-  handleVisible = () => {
-    this.setState({ isVisible: true });
+  handleVisible = (isVisible) => {
+    this.setState({ isVisible });
   };
 
   componentDidMount() {
@@ -55,8 +55,10 @@ export class Img extends React.Component {
     const observer = new IntersectionObserver(
       ([{ isIntersecting }], observerElement) => {
         if (isIntersecting) {
-          this.handleVisible();
+          this.handleVisible(true);
           observerElement.unobserve(ref);
+        } else {
+          this.handleVisible(false);
         }
       },
       {

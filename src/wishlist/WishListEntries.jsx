@@ -3,7 +3,7 @@ import { fitToWindowWidth, remToPx, watchResize } from "../common/util/window";
 import { stopListening } from "../common/util/listener";
 import { WishListCategories } from "./WishListCategories";
 import { WishListEntry } from "./entry/WishListEntry";
-import { FixedSizeGrid, FixedSizeList } from "react-window";
+import { areEqual, FixedSizeGrid, FixedSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 const IDEAL_ITEM_SIZE = remToPx(12);
@@ -156,57 +156,16 @@ export class WishListEntries extends React.Component {
     }
   };
 
-  renderSeriesRow = (renderables, { index, style }) => {
-    const seriesList = Object.keys(renderables);
-    const series = seriesList[index];
-
-    return (
-      <div
-        key={series}
-        style={style}
-        className="flex flex-row flex-nowrap overflow-x-auto"
-      >
-        {renderables[series].map((entry) => this.renderEntry(entry, series))}
-      </div>
-    );
-  };
-
-  renderRow = (renderables, { columnIndex, rowIndex, style }) => {
-    const { itemCount } = this.state;
-    const index = rowIndex * itemCount + columnIndex;
-    const entry = renderables[index];
-    return (
-      <div key={index} style={style}>
-        {entry ? this.renderEntry(entry, index) : null}
-      </div>
-    );
-  };
-
-  renderEntry = (entry, series) => {
+  render() {
     const {
+      className,
+      style,
       category,
       onItemAdded,
       onItemRemoved,
       onNoteChanged,
       isEditable,
     } = this.props;
-    const { item, ...rest } = entry;
-    return (
-      <WishListEntry
-        {...rest}
-        key={`${category}-${series}-${item.id}`}
-        item={item}
-        onAdd={onItemAdded}
-        onRemove={onItemRemoved}
-        onNoteChanged={onNoteChanged}
-        size={IDEAL_ITEM_SIZE}
-        isEditable={isEditable}
-      />
-    );
-  };
-
-  render() {
-    const { className, style, category } = this.props;
     const { itemCount } = this.state;
     const renderables = this.generateRenderables();
     return (
@@ -226,7 +185,17 @@ export class WishListEntries extends React.Component {
                   itemSize={IDEAL_ITEM_SIZE}
                   itemCount={Object.keys(renderables).length}
                 >
-                  {(data) => this.renderSeriesRow(renderables, data)}
+                  {(data) => (
+                    <RenderSeries
+                      {...data}
+                      category={category}
+                      onItemAdded={onItemAdded}
+                      onItemRemoved={onItemRemoved}
+                      onNoteChanged={onNoteChanged}
+                      isEditable={isEditable}
+                      renderables={renderables}
+                    />
+                  )}
                 </FixedSizeList>
               )}
             </AutoSizer>
@@ -243,7 +212,17 @@ export class WishListEntries extends React.Component {
                   columnCount={itemCount}
                   columnWidth={IDEAL_ITEM_SIZE}
                 >
-                  {(data) => this.renderRow(renderables, data)}
+                  {(data) => (
+                    <RenderRow
+                      {...data}
+                      onItemAdded={onItemAdded}
+                      onItemRemoved={onItemRemoved}
+                      onNoteChanged={onNoteChanged}
+                      isEditable={isEditable}
+                      itemCount={itemCount}
+                      renderables={renderables}
+                    />
+                  )}
                 </FixedSizeGrid>
               )}
             </AutoSizer>
@@ -253,3 +232,90 @@ export class WishListEntries extends React.Component {
     );
   }
 }
+
+const RenderSeries = React.memo((props) => {
+  const {
+    category,
+    onItemAdded,
+    onItemRemoved,
+    onNoteChanged,
+    isEditable,
+    renderables,
+    index,
+    style,
+  } = props;
+  const seriesList = Object.keys(renderables);
+  const series = seriesList[index];
+
+  return (
+    <div
+      key={`${category}-${series}-${index}`}
+      style={style}
+      className="flex flex-row flex-nowrap overflow-x-auto"
+    >
+      {renderables[series].map((entry) => (
+        <RenderEntry
+          key={`${category}-${series}-${entry.item.id}`}
+          category={category}
+          onItemAdded={onItemAdded}
+          onItemRemoved={onItemRemoved}
+          onNoteChanged={onNoteChanged}
+          isEditable={isEditable}
+          series={series}
+          entry={entry}
+        />
+      ))}
+    </div>
+  );
+}, areEqual);
+
+const RenderRow = React.memo((props) => {
+  const {
+    onItemAdded,
+    onItemRemoved,
+    onNoteChanged,
+    isEditable,
+    itemCount,
+    renderables,
+    style,
+    rowIndex,
+    columnIndex,
+  } = props;
+  const index = rowIndex * itemCount + columnIndex;
+  const entry = renderables[index];
+  return (
+    <div key={entry ? entry.item.id : index} style={style}>
+      {entry ? (
+        <RenderEntry
+          onItemAdded={onItemAdded}
+          onItemRemoved={onItemRemoved}
+          onNoteChanged={onNoteChanged}
+          isEditable={isEditable}
+          entry={entry}
+        />
+      ) : null}
+    </div>
+  );
+}, areEqual);
+
+const RenderEntry = React.memo((props) => {
+  const {
+    onItemAdded,
+    onItemRemoved,
+    onNoteChanged,
+    isEditable,
+    entry,
+  } = props;
+  const { item, ...rest } = entry;
+  return (
+    <WishListEntry
+      {...rest}
+      item={item}
+      onAdd={onItemAdded}
+      onRemove={onItemRemoved}
+      onNoteChanged={onNoteChanged}
+      isEditable={isEditable}
+      size={IDEAL_ITEM_SIZE}
+    />
+  );
+}, areEqual);

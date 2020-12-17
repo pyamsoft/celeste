@@ -10,7 +10,7 @@
 .celeste {
   background-repeat: repeat;
   background-position: top center;
-  background-size: 200px;
-  background-color: #89d8c3;
+  background-size: 50%;
+  background-color: #0eb9ba;
   background-image: url("images/tile-leaf-green.jpg");
 }

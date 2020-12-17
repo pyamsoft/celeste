@@ -43,7 +43,7 @@ const createItemData = memoize(
   })
 );
 
-const IDEAL_ITEM_SIZE = remToPx(12);
+const IDEAL_ITEM_SIZE = remToPx(11);
 
 function calculatePossibleItemCount() {
   const maxPossibleWidth = fitToWindowWidth();

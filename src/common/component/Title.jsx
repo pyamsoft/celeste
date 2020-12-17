@@ -1,6 +1,6 @@
 import React from "react";
 
-const defaultClassNames = "title text-2xl";
+const defaultClassNames = "title text-3xl";
 
 export function Title(props) {
   const { id, onClick, className, style, children } = props;

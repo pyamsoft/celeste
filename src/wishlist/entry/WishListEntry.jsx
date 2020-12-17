@@ -63,7 +63,7 @@ export class WishListEntry extends React.Component {
 
   render() {
     const { note } = this.state;
-    const { isWishing, item, size, count, isEditable } = this.props;
+    const { isWishing, item, size, count, isEditable, giftedBy } = this.props;
     return (
       <div className="p-1 cursor-point" style={this.generateItemStyle(size)}>
         <PopOver
@@ -89,6 +89,7 @@ export class WishListEntry extends React.Component {
                 item={item}
                 count={count}
                 note={note}
+                giftedBy={giftedBy}
                 isEditable={isEditable}
                 onAdd={this.handleAdd}
                 onRemove={this.handleRemove}

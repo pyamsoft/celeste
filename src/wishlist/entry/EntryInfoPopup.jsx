@@ -2,6 +2,8 @@ import { EmptyButton } from "../../common/component/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
+import { Title } from "../../common/component/Title";
+import { Text } from "../../common/component/Text";
 
 export function EntryInfoPopup(props) {
   const { item, closePopOver } = props;
@@ -33,11 +35,12 @@ function Contents(props) {
   const { item } = props;
   return (
     <div className="block h-full w-full overflow-hidden">
-      <div className="text-2xl">{item.name}</div>
+      <Title>{item.name}</Title>
       <div className="flex flex-row flex-nowrap">
-        <div>Price:</div>
-        <div className="ml-auto text-green-500">{item.price}</div>
+        <Text>Price:</Text>
+        <Text className="ml-auto text-green-500">{item.price}</Text>
       </div>
+      <Text className="flex flex-row flex-nowrap mt-5">More coming soon!</Text>
     </div>
   );
 }

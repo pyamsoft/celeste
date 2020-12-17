@@ -59,9 +59,10 @@ export class WishListEntries extends React.Component {
 
     return {
       item,
-      count: isWishing?.count ?? 0,
+      count: isWishing?.count || 0,
       isWishing: isEditable ? isWishing?.count > 0 : false,
-      note: isWishing?.note ?? "",
+      note: isWishing?.note || "",
+      giftedBy: isWishing?.giftedBy || {},
     };
   };
 
@@ -95,17 +96,15 @@ export class WishListEntries extends React.Component {
                 {categoryItems[series]
                   .filter(this.filterVisibleItems)
                   .map(this.mapToWishing)
-                  .map(({ item, count, note, isWishing }) => (
+                  .map(({ item, ...rest }) => (
                     <WishListEntry
+                      {...rest}
                       key={`${category}-${series}-${item.id}`}
                       item={item}
-                      isWishing={isWishing}
                       onAdd={onItemAdded}
                       onRemove={onItemRemoved}
                       onNoteChanged={onNoteChanged}
                       size={itemSize}
-                      count={count}
-                      note={note}
                       isEditable={isEditable}
                     />
                   ))}
@@ -117,17 +116,15 @@ export class WishListEntries extends React.Component {
             {Object.values(categoryItems)
               .filter(this.filterVisibleItems)
               .map(this.mapToWishing)
-              .map(({ item, count, note, isWishing }) => (
+              .map(({ item, ...rest }) => (
                 <WishListEntry
+                  {...rest}
                   key={`${category}-${item.id}`}
                   item={item}
                   onAdd={onItemAdded}
                   onRemove={onItemRemoved}
                   onNoteChanged={onNoteChanged}
-                  isWishing={isWishing}
                   size={itemSize}
-                  count={count}
-                  note={note}
                   isEditable={isEditable}
                 />
               ))}

@@ -77,7 +77,7 @@ class WishList extends React.Component {
             trigger={({ openPopOver, closePopOver }) => (
               <div className="need-this-for-popover">
                 <CopyToClipboard
-                  text={`${APP_URL}/wishlists/${wishlist.id}`}
+                  text={`${APP_URL}/wishlist/${wishlist.id}`}
                   onCopy={this.handleOnCopy(openPopOver, closePopOver)}
                 >
                   <Button onClick={eatClick} className="px-3">

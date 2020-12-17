@@ -9,6 +9,7 @@ const StyledPopup = styled(Popup)`
   }
   &-content {
     padding: 0;
+    width: auto !important;
   }
 `;
 
@@ -56,6 +57,8 @@ export class PopOver extends React.Component {
       trigger,
       children,
       keepInside,
+      disabled,
+      on,
     } = this.props;
     return (
       <StyledPopup
@@ -63,6 +66,7 @@ export class PopOver extends React.Component {
         trigger={
           typeof trigger === TYPE_FUNCTION ? trigger(this.operations) : trigger
         }
+        on={disabled ? [] : on}
         position={position}
         keepTooltipInside={keepInside}
         closeOnDocumentClick={closeOnClickOutside}

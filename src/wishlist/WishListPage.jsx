@@ -8,6 +8,7 @@ import { ProfileInteractor } from "../profile/ProfileInteractor";
 import { stopListening } from "../common/util/listener";
 import { WishListGiftInteractor } from "./WishListGiftInteractor";
 import _ from "lodash";
+import { ForceSignInDialog } from "./ForceSignInDialog";
 
 const logger = Logger.tag("WishListPage");
 
@@ -19,6 +20,7 @@ class WishListController extends React.Component {
       wishlist: null,
       error: null,
 
+      needToSignIn: false,
       committing: false,
     };
 
@@ -48,8 +50,7 @@ class WishListController extends React.Component {
     this.setState({ loading: true }, async () => {
       const payload = { loading: false };
       try {
-        const wishlist = await WishListInteractor.get({ itemID: id });
-        payload.wishlist = wishlist;
+        payload.wishlist = await WishListInteractor.get({ itemID: id });
         payload.error = null;
       } catch (e) {
         logger.e(e, "Error loading wishlist");
@@ -88,10 +89,19 @@ class WishListController extends React.Component {
     });
   };
 
+  stopShowingSignInPopup = () => {
+    this.setState({ needToSignIn: false });
+  };
+
+  showSignInPopup = () => {
+    this.setState({ needToSignIn: true });
+  };
+
   handleItemAdded = async (item) => {
     const { user } = this.props;
     if (!user) {
       logger.w("Missing user, you must sign in to do gift things.");
+      this.showSignInPopup();
       return;
     }
 
@@ -114,6 +124,7 @@ class WishListController extends React.Component {
     const { user } = this.props;
     if (!user) {
       logger.w("Missing user, you must sign in to do gift things.");
+      this.showSignInPopup();
       return;
     }
 
@@ -136,6 +147,7 @@ class WishListController extends React.Component {
     const { user } = this.props;
     if (!user) {
       logger.w("Missing user, you must sign in to do gift things.");
+      this.showSignInPopup();
       return;
     }
 
@@ -160,21 +172,29 @@ class WishListController extends React.Component {
 
   render() {
     const { user, acnh } = this.props;
-    const { error, loading, wishlist } = this.state;
-    return error ? (
-      <div className="m-5 text-red-600">ERROR: {error.message}</div>
-    ) : !wishlist || loading ? (
-      <Loading />
-    ) : (
-      <WishListDelegate
-        user={user}
-        acnh={acnh}
-        isEditable={false}
-        name={wishlist.name}
-        items={wishlist.items}
-        onItemAdded={this.handleItemAdded}
-        onItemRemoved={this.handleItemRemoved}
-      />
+    const { error, loading, wishlist, needToSignIn } = this.state;
+    return (
+      <React.Fragment>
+        {error ? (
+          <div className="m-5 text-red-600">ERROR: {error.message}</div>
+        ) : !wishlist || loading ? (
+          <Loading />
+        ) : (
+          <WishListDelegate
+            user={user}
+            acnh={acnh}
+            isEditable={false}
+            name={wishlist.name}
+            items={wishlist.items}
+            onItemAdded={this.handleItemAdded}
+            onItemRemoved={this.handleItemRemoved}
+          />
+        )}
+
+        {needToSignIn && (
+          <ForceSignInDialog onClose={this.stopShowingSignInPopup} />
+        )}
+      </React.Fragment>
     );
   }
 }

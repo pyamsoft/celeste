@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import { TextArea } from "../../common/component/TextArea";
+import { Title } from "../../common/component/Title";
 
 export function NotePopup(props) {
   const { closePopOver, isEditable, note, onNoteChanged } = props;
@@ -38,7 +39,7 @@ function Contents(props) {
   const { note, onNoteChanged, isEditable } = props;
   return (
     <div className="block h-full w-full overflow-hidden">
-      <div className="text-2xl">Notes</div>
+      <Title>Notes</Title>
       <TextArea
         value={note}
         onChange={onNoteChanged}

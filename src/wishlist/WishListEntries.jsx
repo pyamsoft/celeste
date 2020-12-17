@@ -45,16 +45,11 @@ const createItemData = memoize(
 
 const IDEAL_ITEM_SIZE = remToPx(11);
 
-function calculatePossibleItemCount() {
-  const maxPossibleWidth = fitToWindowWidth();
-  return Math.floor(maxPossibleWidth / IDEAL_ITEM_SIZE);
-}
-
 export class WishListEntries extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      itemCount: calculatePossibleItemCount(),
+      itemCount: this.calculatePossibleItemCount(),
     };
 
     this.resizeCallback = null;
@@ -62,7 +57,7 @@ export class WishListEntries extends React.Component {
 
   componentDidMount() {
     this.resizeCallback = watchResize(() => {
-      this.setState({ itemCount: calculatePossibleItemCount() });
+      this.setState({ itemCount: this.calculatePossibleItemCount() });
     });
   }
 
@@ -71,6 +66,23 @@ export class WishListEntries extends React.Component {
       this.resizeCallback = null;
     }
   }
+
+  calculatePossibleItemCount = () => {
+    let maxPossibleWidth;
+    if (this.ref) {
+      maxPossibleWidth = this.ref.getBoundingClientRect().width;
+    } else {
+      maxPossibleWidth = fitToWindowWidth();
+    }
+    return Math.floor(maxPossibleWidth / IDEAL_ITEM_SIZE);
+  };
+
+  setRef = (ref) => {
+    this.ref = ref;
+    if (this.ref) {
+      this.setState({ itemCount: this.calculatePossibleItemCount() });
+    }
+  };
 
   getSearchPriority = (name) => {
     if (!name) {
@@ -230,6 +242,7 @@ export class WishListEntries extends React.Component {
 
     return (
       <div
+        ref={this.setRef}
         className={`${
           className ? className : ""
         } block w-full overflow-hidden h-full popover-boundary`}

@@ -36,7 +36,6 @@ function NoteButton(props) {
     <div className="flex flex-row flex-nowrap w-full mb-2 relative">
       <div className="flex-auto" />
       <PopOver
-        keepInside=".tooltip-boundary"
         closeOnClickOutside={false}
         trigger={({ togglePopOver }) => (
           <div className="need-this-div-or-ref-error">
@@ -80,7 +79,7 @@ function CountButtons(props) {
       </IconButton>
       <div className="flex-auto" />
       {count > 0 && (
-        <IconButton className="mx-2 text-white font-bold">{count}</IconButton>
+        <IconButton className="mx-2 text-white">{count}</IconButton>
       )}
       <div className="flex-auto" />
       <IconButton className="mr-2 text-green-500" onClick={onAdd}>
@@ -105,7 +104,7 @@ function IconButton(props) {
   const { children, className, onClick } = props;
   return (
     <EmptyButton
-      className={`my-auto font-size-xl bg-gray-500 hover:bg-gray-300 border-2 border-gray-500 hover:border-gray-300 rounded-lg font-mono ${
+      className={`my-auto bg-gray-500 hover:bg-gray-300 border-2 border-gray-500 hover:border-gray-300 rounded-lg font-mono ${
         className ? className : ""
       }`}
       onClick={onClick}

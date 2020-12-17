@@ -167,7 +167,7 @@ class WishListController extends React.Component {
     const { user, acnh } = this.props;
     const { error, loading, wishlist } = this.state;
     return error ? (
-      <div className="m-5 font-bold text-red-600">ERROR: {error.message}</div>
+      <div className="m-5 text-red-600">ERROR: {error.message}</div>
     ) : !wishlist || loading ? (
       <Loading />
     ) : (

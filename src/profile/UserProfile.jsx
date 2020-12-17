@@ -101,7 +101,7 @@ class WishList extends React.Component {
             )}
           >
             {({ closePopOver }) => (
-              <div className="w-full h-full font-bold" onClick={closePopOver}>
+              <div className="w-full h-full" onClick={closePopOver}>
                 Copied to clipboard! Share your list with friends!
               </div>
             )}

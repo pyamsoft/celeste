@@ -113,6 +113,12 @@ export class WishListEditorDialog extends React.Component {
     this.setState({ items: newItems });
   };
 
+  handleNameChanged = async (name) => {
+    if (name.length > 0 && name.trim().length > 0) {
+      this.setState({ name });
+    }
+  };
+
   render() {
     const { user, acnh } = this.props;
     const { name, items } = this.state;
@@ -127,6 +133,7 @@ export class WishListEditorDialog extends React.Component {
           onItemAdded={this.handleItemAdded}
           onItemRemoved={this.handleItemRemoved}
           onNoteChanged={this.handleNoteChanged}
+          onNameChanged={this.handleNameChanged}
         >
           <WishListSaveRow
             className="mt-3"

@@ -16,6 +16,7 @@ export function WishListView(props) {
     onItemAdded,
     onItemRemoved,
     onNoteChanged,
+    onNameChanged,
     isEditable,
   } = rest;
   return (
@@ -24,7 +25,12 @@ export function WishListView(props) {
       style={style}
     >
       <div className="h-full w-full overflow-hidden flex flex-col">
-        <WishListTitle name={name} className="mb-3" />
+        <WishListTitle
+          isEditable={isEditable}
+          name={name}
+          className="mb-3"
+          onNameChanged={onNameChanged}
+        />
         <WishListTabs category={category} onTabClicked={onCategoryChanged} />
         <WishListEntries
           className="flex-auto"

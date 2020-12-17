@@ -195,7 +195,6 @@ export class WishListEditorDialog extends React.Component {
           <WishListSaveRow
             className="mt-3"
             onCancel={this.handleClose}
-            onSave={this.handleSave}
           />
         </WishListDelegate>
       </Dialog>

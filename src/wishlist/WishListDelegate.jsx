@@ -7,8 +7,13 @@ export class WishListDelegate extends React.Component {
     super(props);
     this.state = {
       category: WishListCategories.DEFAULT,
+      search: "",
     };
   }
+
+  handleSearchChanged = (search) => {
+    this.setState({ search });
+  };
 
   handleCategoryChanged = (category) => {
     this.setState({ category });
@@ -28,7 +33,7 @@ export class WishListDelegate extends React.Component {
       onNoteChanged,
       onNameChanged,
     } = this.props;
-    const { category } = this.state;
+    const { search, category } = this.state;
 
     return (
       <div className="w-full h-full max-h-full max-w-full overflow-hidden flex flex-col">
@@ -37,6 +42,7 @@ export class WishListDelegate extends React.Component {
           acnh={acnh}
           name={name}
           items={items}
+          search={search}
           category={category}
           isCreating={isCreating}
           isEditable={isEditable}
@@ -44,6 +50,7 @@ export class WishListDelegate extends React.Component {
           onItemRemoved={onItemRemoved}
           onNoteChanged={onNoteChanged}
           onNameChanged={onNameChanged}
+          onSearchChanged={this.handleSearchChanged}
           onCategoryChanged={this.handleCategoryChanged}
         />
         {children}

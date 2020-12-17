@@ -39,15 +39,84 @@ export class WishListEntries extends React.Component {
     }
   }
 
+  getSearchPriority = (name) => {
+    const { search } = this.props;
+    const cleanSearch = search.trim().toLowerCase();
+    const cleanName = name.trim().toLowerCase();
+
+    if (cleanName === cleanSearch) {
+      return 1;
+    }
+
+    if (cleanName.startsWith(cleanSearch)) {
+      return 2;
+    }
+
+    if (cleanName.endsWith(cleanSearch)) {
+      return 3;
+    }
+
+    if (cleanName.indexOf(cleanSearch) >= 0) {
+      return 4;
+    }
+
+    return 0;
+  };
+
   filterVisibleItems = (item) => {
-    const { items, isEditable, category } = this.props;
+    const { search, items, isEditable, category } = this.props;
+    const noSearch = !search || !search.trim();
     if (isEditable) {
-      return true;
+      if (noSearch) {
+        return true;
+      } else {
+        return this.getSearchPriority(item.name) > 0;
+      }
+    }
+
+    return items.find((i) => {
+      const filtered =
+        i.id === item.id && category === i.type && i.series === item.series;
+      if (!filtered) {
+        return false;
+      } else {
+        if (noSearch) {
+          return true;
+        } else {
+          return this.getSearchPriority(i.name) > 0;
+        }
+      }
+    });
+  };
+
+  sortItems = (i1, i2) => {
+    const { search } = this.props;
+    const noSearch = !search || !search.trim();
+    if (noSearch) {
+      // Do not change the sort order
+      return 0;
+    }
+
+    const p1 = this.getSearchPriority(i1.name);
+    const p2 = this.getSearchPriority(i2.name);
+    if (p1 <= 0 && p2 <= 0) {
+      return 0;
+    }
+
+    if (p1 > 0 && p2 <= 0) {
+      return -1;
+    }
+
+    if (p2 > 0 && p1 <= 0) {
+      return 1;
+    }
+
+    if (p1 < p2) {
+      return -1;
+    } else if (p1 > p2) {
+      return 1;
     } else {
-      return items.find(
-        (i) =>
-          i.id === item.id && category === i.type && i.series === item.series
-      );
+      return 0;
     }
   };
 
@@ -95,6 +164,7 @@ export class WishListEntries extends React.Component {
               >
                 {categoryItems[series]
                   .filter(this.filterVisibleItems)
+                  .sort(this.sortItems)
                   .map(this.mapToWishing)
                   .map(({ item, ...rest }) => (
                     <WishListEntry
@@ -115,6 +185,7 @@ export class WishListEntries extends React.Component {
           <div className="flex flex-row flex-wrap overflow-x-hidden overflow-y-auto h-full">
             {Object.values(categoryItems)
               .filter(this.filterVisibleItems)
+              .sort(this.sortItems)
               .map(this.mapToWishing)
               .map(({ item, ...rest }) => (
                 <WishListEntry

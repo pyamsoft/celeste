@@ -19,7 +19,7 @@
     "intersection-observer": "0.12.0",
     "lodash": "4.17.20",
     "memoize-one": "5.1.1",
-    "postcss": "7",
+    "postcss": "8",
     "react": "17.0.1",
     "react-app-polyfill": "2.0.0",
     "react-copy-to-clipboard": "5.0.2",
